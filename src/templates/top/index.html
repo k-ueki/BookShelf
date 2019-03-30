@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>ウチ本</title>
+        <link rel="stylesheet" type="style/css" href="../../css/index_top.css">
+    </head>
+    <body>
+        <!--header-->
+        {include file="../common_tpl/header.html"}
+        <div class="main-wrapper-top">
+            <div class="parsonal-sp">
+                <!--top-image-->
+                <img class="parsonal-icon" href="../../images/{$parsonal_info.image}">
+                <div class="parsonal-name">{$parsonal_info.name}</div>
+
+            </div>
+            <div class="bookshelf-parsonal-wrapper">
+                <!--search-->
+                <div class="mini-header">
+                    <input type="search" name="word-search" class="word-search" placeholder="検索ワード">
+                    <button class="btn">検索</button>
+                    <select name="refine">
+                        <option value="order">新着順</option>
+                        <option value=""></option>
+                    </select>
+                </div>
+				<div class="dispInfo">
+					<!--display personal information-->
+					<div>
+						<div class="iconForTop">
+							<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
+						</div>
+						<div>exmpple</div>
+					</div>
+	                <div class="bookshelf">
+	                    <!--images-->
+						<div>hello exmaple!!</div>
+						<div>exmaple2</div>
+	                </div>
+				</div>
+            </div>
+        </div>
+
+        <!--footer-->
+    </body>
+</html>
