@@ -15,59 +15,39 @@
 			</div>
 			<div class="image-form">
 				<!--
-		<input v-model="file" type="file" name="image" class="image" value=""></input>
+				<input v-model="file" type="file" name="image" class="image">
 				-->
 			</div>
 			<!---<input type="hidden" name="flag" value=1>-->
-			<div class="btnform"><button type="submit" class="signup-btn" v-on:click=signUp>登録</button></div>
+			<div class="btnform"><button type="submit" class="signup-btn" v-on:click=signUp>登録{{name}}</button></div>
 
 		</div>
 </template>
-
+<script src="../main.js"></script>
 <script>
+import Vue from 'vue'
 import axios from 'axios'
 
 export default{
 	pops:['name','password','email','file'],
 	name: "signup",
-	data(){
-		return{
-			name:'',
-			password:'',
-			email:'',
-			file:''
-		}
+	data:{
 	},
 	methods:{
 		signUp(){
 			//axios.post("../../../server/server.go",{
 			axios.post("http://localhost:8888/signup/",{
-				test:"test"
+				name: this.name,
+				password: this.password,
+				email: this.email
 			}).then(response => {
 				console.log(response)
-				console.log("送信成功")
 			}).catch(error => {
 				this.errorStatus = "Error: Network Error";
-//				if(!error.response){
-//					this.errorStatus = "Error: Network Error";
-//				}else{
-//					this.errorStatus = error.response.data.message;
-//				}
 			})
-			console.log("hellow")
-			console.log(this.name,this.password,this.email)
 		}
 	}
 }
-//const Signup = new Vue({
-//	el: "#signup",
-//	data:{
-//		name:"kueki",
-//		password:"kkk",
-//		email:"jkfdalfja",
-//		file:""
-//	}
-//})
 </script>
 
 <style>

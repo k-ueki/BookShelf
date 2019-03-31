@@ -11,7 +11,38 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+
+	ctrl "github.com/k-ueki/app2/src/server/controller"
+	"github.com/k-ueki/app2/src/server/model"
 )
+
+func main() {
+	var DSN string = "root:@/uchihon"
+
+	db, err := sql.Open("mysql", DSN)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(db)
+	defer db.Close()
+
+	//CORS
+	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:8080"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
+	allowedHeaders := handlers.AllowedHeaders([]string{"content-type"})
+
+	r := mux.NewRouter()
+	//handler
+	userInfo := make(chan *model.User)
+	uctr := &ctrl.User{DB: db, Stream: userInfo}
+	fmt.Println(uctr)
+	r.HandleFunc("/", index)
+	r.HandleFunc("/signup/", uctr.NewUser)
+	r.HandleFunc("/top/", top)
+
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
+	http.ListenAndServe(":8888", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(r))
+}
 
 func renderTemplate(w http.ResponseWriter, tmpl string, r *http.Request) {
 	//	t := template.Must(template.ParseFiles("client/src/" + tmpl + ".js"))
@@ -37,35 +68,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	//	renderTemplate(w, "index", r)
 	//renderTemplate(w, "main", r)
 }
-func signup(w http.ResponseWriter, r *http.Request) {
 
-	renderTemplate(w, "signup/index", r)
-}
 func top(w http.ResponseWriter, r *http.Request) {
 	//renderTemplate(w, "top/index", r)
-}
-
-func main() {
-	var DSN string = "root:@/uchihon"
-
-	db, err := sql.Open("mysql", DSN)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	//CORS
-	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:8080"})
-	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
-	allowedHeaders := handlers.AllowedHeaders([]string{"content-type"})
-
-	r := mux.NewRouter()
-	//handler
-	r.HandleFunc("/", index)
-	r.HandleFunc("/signup/", signup)
-	r.HandleFunc("/top/", top)
-
-	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
-	http.ListenAndServe(":8888", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(r))
-
 }
