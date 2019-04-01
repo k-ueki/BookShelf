@@ -4,23 +4,31 @@
 			<div class="name-form">
 				<li class="required">*必須</li>
 				<input v-model="name" type="text" name="name" class="name" placeholder="名前" value="">
+				<!--
+				<input v-model="newUser.name" type="text" name="name" class="name" placeholder="名前" value="">
+				-->
 			</div>
 			<div class="pass-form">
 				<li class="required">*必須</li>
 				<input v-model="password" type="password" name="pass" class="pass" placeholder="パスワード" value="">
+				<!--
+				<input v-model="newUser.password" type="password" name="pass" class="pass" placeholder="パスワード" value="">
+				-->
 			</div>
 			<div class="email-form">
 				<li class="required">*必須</li>
 				<input v-model="email" type="email" name="email" class="email" placeholder="メールアドレス" value="">
+				<!--
+				<input v-model="newUser.email" type="email" name="email" class="email" placeholder="メールアドレス" value="">
+				-->
 			</div>
 			<div class="image-form">
 				<!--
-				<input v-model="file" type="file" name="image" class="image">
+				<input v-model="newUser.file" type="file" name="image" class="image">
 				-->
 			</div>
 			<!---<input type="hidden" name="flag" value=1>-->
 			<div class="btnform"><button type="submit" class="signup-btn" v-on:click=signUp>登録{{name}}</button></div>
-
 		</div>
 </template>
 <script src="../main.js"></script>
@@ -28,19 +36,36 @@
 import Vue from 'vue'
 import axios from 'axios'
 
+const newUser = function(){
+	this.name = '',
+	this.email = '',
+	this.password = '' //	//this.file = ''
+}
+
+//let params = new URLSearchParams();
+//params.append("name",
 export default{
 	pops:['name','password','email','file'],
 	name: "signup",
-	data:{
+	data(){
+		return{
+				name:'',
+				email:'',
+				password:''
+				//file:''
+		}
 	},
 	methods:{
 		signUp(){
-			//axios.post("../../../server/server.go",{
-			axios.post("http://localhost:8888/signup/",{
-				name: this.name,
-				password: this.password,
-				email: this.email
-			}).then(response => {
+			let params = new URLSearchParams();
+			params.append("name",this.name);
+			params.append("password",this.password);
+			params.append("email",this.email);
+			//params.append("file",this.file);
+
+			axios.post("http://localhost:8888/signup/",params)
+			.then(response => {
+				console.log(reponse.data.test)
 				console.log(response)
 			}).catch(error => {
 				this.errorStatus = "Error: Network Error";

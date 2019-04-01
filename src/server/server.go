@@ -23,7 +23,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(db)
+	//fmt.Println(db)
 	defer db.Close()
 
 	//CORS
@@ -35,7 +35,7 @@ func main() {
 	//handler
 	userInfo := make(chan *model.User)
 	uctr := &ctrl.User{DB: db, Stream: userInfo}
-	fmt.Println(uctr)
+	//fmt.Println(uctr)
 	r.HandleFunc("/", index)
 	r.HandleFunc("/signup/", uctr.NewUser)
 	r.HandleFunc("/top/", top)
