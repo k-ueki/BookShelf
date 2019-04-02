@@ -22,6 +22,8 @@ func main() {
 	db, err := sql.Open("mysql", DSN)
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		fmt.Println("seccess for connection!!")
 	}
 	//fmt.Println(db)
 	defer db.Close()

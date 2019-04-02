@@ -42,8 +42,11 @@ func sep(str string, cha string) map[string]string {
 }
 func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
-	var usr model.User
-
+	var usr = model.User{
+		Name:     body["name"],
+		Password: body["password"],
+		Email:    body["email"],
+	}
 	inserted, err := usr.Insert(u.DB)
 	if err != nil {
 		fmt.Println(inserted)
@@ -51,5 +54,4 @@ func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("SUCCESS", inserted)
-	fmt.Println(r)
 }

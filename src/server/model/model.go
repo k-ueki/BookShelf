@@ -14,10 +14,11 @@ type User struct {
 
 func (u *User) Insert(db *sql.DB) (*User, error) {
 	res, err := db.Exec("insert into users (username,email,password) values (?,?,?)", u.Name, u.Email, u.Password)
+	fmt.Println("RES", res)
+	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(res)
 	defer db.Close()
 	return &User{
 		Name:     u.Name,
