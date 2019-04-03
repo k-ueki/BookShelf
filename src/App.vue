@@ -23,9 +23,6 @@ export default {
 		}
 	},
 	methods:{
-		mkAcount:{
-			//var res = axios.get("http://localhost:8080/uchihon/")
-		}
 	},
   components: {
     HelloWorld,

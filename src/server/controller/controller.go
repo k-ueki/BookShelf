@@ -28,18 +28,22 @@ func sep(str string, cha string) map[string]string {
 	fmt.Println(tmp)
 
 	var el = make([]string, 3) //name,password,emailの3
+	var th = make([]string, 3)
 	for i, v := range tmp {
 		tmptmp := strings.Split(v, "=")
+		th[i] = tmptmp[0]
 		el[i] = tmptmp[1]
 	}
 	fmt.Println(el)
 	res := map[string]string{
-		"name":     el[0],
-		"password": el[1],
-		"email":    el[2],
+		th[0]: el[0],
+		th[1]: el[1],
+		th[2]: el[2],
 	}
 	return res
 }
+
+//新規登録
 func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	var usr = model.User{
@@ -54,4 +58,18 @@ func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("SUCCESS", inserted)
+}
+
+func (u *User) Login(w http.ResponseWriter, r *http.Request) {
+	body := body(r)
+	var usr = model.User{
+		Password: body["pass"],
+		Email:    body["email"],
+	}
+	res, err := usr.Check(u.DB)
+	if err != nil {
+		fmt.Println("ERROR!", err)
+		return
+	}
+	fmt.Println("CHECKED", res)
 }
