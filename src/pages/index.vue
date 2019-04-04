@@ -55,9 +55,7 @@ export default{
 				.then(response => {
 					this.id = response.data
 					if(!!response.data){
-						console.log("OK")
-						document.location="/top/id="+response.data
-						//this.$router.push({path:"/top/",params: {id:2}})
+						this.$router.push({path:"/top/",query: {id:response.data}})
 					}
 				}).catch(error=>{
 					this.errorStatus = "Error: Network Error";

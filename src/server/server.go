@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -20,8 +19,6 @@ func main() {
 	db, err := sql.Open("mysql", DSN)
 	if err != nil {
 		log.Fatal(err)
-	} else {
-		fmt.Println("seccess for connection!!")
 	}
 	//fmt.Println(db)
 	defer db.Close()
@@ -38,13 +35,8 @@ func main() {
 	//fmt.Println(uctr)
 	r.HandleFunc("/", uctr.Login)
 	r.HandleFunc("/signup/", uctr.NewUser)
-	r.HandleFunc("/top/", top)
+	r.HandleFunc("/top/", uctr.SelectPersonalInfo)
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
 	http.ListenAndServe(":8888", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(r))
-}
-
-func top(w http.ResponseWriter, r *http.Request) {
-	//renderTemplate(w, "top/index", r)
-	fmt.Println("HJASHKFHAJSKDHAJSDKHAJSDHAKSJHDJKASDHKASDHJAKS")
 }

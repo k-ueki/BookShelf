@@ -53,7 +53,14 @@ export default{
 
 			axios.post("http://localhost:8888/signup/",params)
 			.then(response => {
-				console.log(reponse.data.test)
+				console.log(response.data)
+				if(response){
+					//this.$router.push("/top/id="+response.data.ID)	
+					alert("登録が成功しました。MyPageに移行します。")
+						this.$router.push({path:"/top/",query: {id:response.data.ID}})
+					//document.location("/top/id="+response.data.ID)
+					//console.log(response.data)
+				}
 				console.log(response)
 			}).catch(error => {
 				this.errorStatus = "Error: Network Error";

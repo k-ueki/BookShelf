@@ -2,8 +2,10 @@ package controller
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/k-ueki/app2/src/server/model"
@@ -19,13 +21,13 @@ func body(r *http.Request) map[string]string {
 	len := r.ContentLength
 	body := make([]byte, len)
 	r.Body.Read(body)
-	fmt.Println(string(body))
+	//fmt.Println(string(body))
 	tmp := string(body)
 	return sep(tmp, "&")
 }
 func sep(str string, cha string) map[string]string {
 	tmp := strings.Split(str, cha)
-	fmt.Println(tmp)
+	//fmt.Println(tmp)
 
 	var el = make([]string, 3) //name,password,emailの3
 	var th = make([]string, 3)
@@ -34,7 +36,7 @@ func sep(str string, cha string) map[string]string {
 		th[i] = tmptmp[0]
 		el[i] = tmptmp[1]
 	}
-	fmt.Println(el)
+	//fmt.Println(el)
 	res := map[string]string{
 		th[0]: el[0],
 		th[1]: el[1],
@@ -57,7 +59,15 @@ func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("FAILED!!!", err)
 		return
 	}
-	fmt.Println("SUCCESS", inserted)
+	//fmt.Println("SUCCESS", inserted)
+
+	res, err := usr.SelectIdByNameANDPass(u.DB)
+	if err != nil {
+		fmt.Println("ERROR!", err)
+		return
+	}
+	mar, _ := json.Marshal(res)
+	fmt.Fprintf(w, string(mar))
 }
 
 func (u *User) Login(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +81,25 @@ func (u *User) Login(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("ERROR!", err)
 		return
 	}
-	fmt.Println("CHECKED", res)
+	//fmt.Println("CHECKED", res)
 
+	//response := fmt.Sprintf("%d,%s", res.ID, res.Name)
 	fmt.Fprintf(w, fmt.Sprint(res.ID))
+	//fmt.Fprintf(w, response)
+}
+func (u *User) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
+	body := body(r)
+	//fmt.Println(body["id"])
+	tmp, _ := strconv.Atoi(body["id"])
+	var usr = model.User{
+		ID: tmp,
+	}
+	//fmt.Println("USR", usr)
+	usrInfo, err := usr.SelectById(u.DB)
+	if err != nil {
+		fmt.Println("Error!", err)
+	}
+	//fmt.Println("USRINFO", usrInfo)
+	marUsr, _ := json.Marshal(usrInfo)
+	fmt.Fprintf(w, string(marUsr))
 }

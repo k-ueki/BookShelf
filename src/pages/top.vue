@@ -45,15 +45,22 @@ export default{
 	name: 'top',
 	data(){
 		return{
-			name:"ueki"
+			id:'',
+			name:"",
 		}
 	},
 	created(){
-		console.log(this)
-		//this.$router.push({path:"/top/",params:{id:3}})
-		//var params = new URLSearchParams();
-		//params.append("id",id);
-		//axios.post("http://localhost:8080")
+		var query = Object.assign({}, this.$route.query)
+		console.log("QUERYID",query.id)
+
+		var params = new URLSearchParams();
+		params.append("id",query.id);
+		axios.post("http://localhost:8888/top/?id="+query.id,params)
+			.then(res => {
+				this.name=res.data.Name
+			}).catch(err => {
+				this.errorStatus = "Error: Network Error";
+			})
 	},
 	methods:{
 
@@ -121,6 +128,7 @@ export default{
 	width:90px;
 	height:90px;
 	border-radius:50%;
+	margin-top:10px;
 }
 .iconBook{
 	padding:10px 10px;
