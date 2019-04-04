@@ -48,6 +48,13 @@ export default{
 			name:"ueki"
 		}
 	},
+	created(){
+		console.log(this)
+		//this.$router.push({path:"/top/",params:{id:3}})
+		//var params = new URLSearchParams();
+		//params.append("id",id);
+		//axios.post("http://localhost:8080")
+	},
 	methods:{
 
 	},
@@ -100,7 +107,7 @@ export default{
 }
 
 .bookshelf-parsonal-wrapper{
-    width:79%;
+    width:78%;
     height:100%;
     float:right;
     border:2px solid rgb(65,166,90);

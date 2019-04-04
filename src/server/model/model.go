@@ -36,7 +36,6 @@ func (u *User) Check(db *sql.DB) (*User, error) {
 	if err := db.QueryRow(`select id,username,email,password from users where email=? AND password=?`, u.Email, u.Password).Scan(&usr.ID, &usr.Name, &usr.Email, &usr.Password); err != nil {
 		return nil, err
 	}
-	defer db.Close()
 	fmt.Println("JJJ", usr)
 	return usr, nil
 }

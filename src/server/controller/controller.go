@@ -72,4 +72,6 @@ func (u *User) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("CHECKED", res)
+
+	fmt.Fprintf(w, fmt.Sprint(res.ID))
 }

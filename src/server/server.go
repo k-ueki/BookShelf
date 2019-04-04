@@ -46,4 +46,5 @@ func main() {
 
 func top(w http.ResponseWriter, r *http.Request) {
 	//renderTemplate(w, "top/index", r)
+	fmt.Println("HJASHKFHAJSKDHAJSDKHAJSDHAKSJHDJKASDHKASDHJAKS")
 }

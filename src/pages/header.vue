@@ -2,7 +2,7 @@
         <header>
             
                 <div class="head-container">
-                    <div class="logo">ウチ本</div>
+                    <div class="logo">本</div>
                     <div class="header-list">
                         <ul>
                             <li>A</li>

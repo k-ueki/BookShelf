@@ -1,5 +1,6 @@
 <template>
   <div class="main-wrapper">
+	  {{id}}
     <div class="main-container">
       <div class="left-half-page">
         <div class="catch">
@@ -40,7 +41,8 @@ export default{
 	data(){
 		return{
 			email:'',
-			pass:''
+			pass:'',
+			id:''
 		}
 	},
 	methods:{
@@ -51,7 +53,12 @@ export default{
 
 			axios.post("http://localhost:8888/",params)
 				.then(response => {
-
+					this.id = response.data
+					if(!!response.data){
+						console.log("OK")
+						document.location="/top/id="+response.data
+						//this.$router.push({path:"/top/",params: {id:2}})
+					}
 				}).catch(error=>{
 					this.errorStatus = "Error: Network Error";
 				})
