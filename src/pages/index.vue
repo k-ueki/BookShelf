@@ -1,5 +1,6 @@
 <template>
   <div class="main-wrapper">
+	  {{id}}
     <div class="main-container">
       <div class="left-half-page">
         <div class="catch">
@@ -12,7 +13,9 @@
       </div>
       <div class="right-half-page">
         <div class="login-form">
-          <input type="email" name="email" class="form" placeholder="メールアドレス"><input type="password" name="pass" class="form" placeholder="パスワード"><button class="login-form-btn">ログイン</button>
+			<input type="email" v-model="email" name="email" class="form" placeholder="メールアドレス">
+			<input type="password" v-model="pass" name="pass" class="form" placeholder="パスワード">
+			<button class="login-form-btn" @click=login>ログイン</button>
           <!--<a href="#">パスワードを忘れた場合はこちら</a>-->
         </div>
         <div class="catch2">
@@ -20,7 +23,7 @@
           <h3 class="item">いろいろな本をのぞいてみよう</h3>
           <div class="login-regist-btn">
 			  <li>ウチ本を始めよう</li>
-			  <router-link to="/signup/"><button class="make-account-btn btn" v-on:click=mkAcount>アカウント作成</button></router-link>
+			  <router-link to="/signup/"><button class="make-account-btn btn">アカウント作成</button></router-link>
 			  <!--
 			  <router-link ><button class="login-btn btn">ログイン</button></router-link>
 			  -->
@@ -35,7 +38,29 @@ import axios from 'axios'
 
 export default{
 	name:"index",
+	data(){
+		return{
+			email:'',
+			pass:'',
+			id:''
+		}
+	},
 	methods:{
+		login(){
+			let params = new URLSearchParams();
+			params.append('email',this.email);
+			params.append('pass',this.pass);
+
+			axios.post("http://localhost:8888/",params)
+				.then(response => {
+					this.id = response.data
+					if(!!response.data){
+						this.$router.push({path:"/top/",query: {id:response.data}})
+					}
+				}).catch(error=>{
+					this.errorStatus = "Error: Network Error";
+				})
+		}
 	}
 }
 </script>

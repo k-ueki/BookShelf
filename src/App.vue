@@ -1,15 +1,12 @@
 <template>
   <div id="main">
-	  <!--    <img alt="Vue logo" src="./assets/logo.png">-->
-	  <!--
-	  <HelloWorld msg="Welcome to Your Vue.js App"/>
-	  -->
   <router-view></router-view>
   </div>
 </template>
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import Header from './components/header.vue'
+import Modal from './components/modal.vue'
 
 import axios from "axios"
 import Router from 'vue-router'
@@ -19,18 +16,16 @@ export default {
   name: 'main',
 	data(){
 		return {
-			msg:"testest"
+			msg:"t"
 		}
 	},
 	methods:{
-		mkAcount:{
-			//var res = axios.get("http://localhost:8080/uchihon/")
-		}
 	},
-  components: {
-    HelloWorld,
-	  Header
-  }
+  	components: {
+    	HelloWorld,
+	  	Header,
+	  	Modal
+  	}
 }
 
 </script>

@@ -1,8 +1,7 @@
 <template>
         <header>
-            
                 <div class="head-container">
-                    <div class="logo">ウチ本</div>
+                    <div class="logo">MyBook</div>
                     <div class="header-list">
                         <ul>
                             <li>A</li>

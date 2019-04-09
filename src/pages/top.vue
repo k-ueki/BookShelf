@@ -1,6 +1,9 @@
 <template>
         <div class="main-wrapper-top">
-	<Header/>
+			<!--
+			<Modal/>
+			-->
+			<Header/>
             <div class="parsonal-sp">
                 <!--top-image-->
 				<!--
@@ -13,6 +16,10 @@
             <div class="bookshelf-parsonal-wrapper">
                 <!--search-->
                 <div class="mini-header">
+					<!--
+					<div class="addbook" @click="showModal  = true">+</div>
+					-->
+					<router-link to="/regist/"><button>+</button></router-link>
 					<div class="searchWrap"><input type="search" name="word-search" class="word-search" placeholder="検索ワード"></div>
 					<div class="btnWrap"><button class="btn">検索</button></div>
 					<div class="selectWrap"><select name="refine">
@@ -38,21 +45,41 @@
         </div>
 </template>
 <script>
+import HelloWorld from '../components/HelloWorld.vue'
 import Header from '../components/header.vue'
+//import Modal from '../components/modal.vue'
+
 import axios from 'axios'
+
 
 export default{
 	name: 'top',
 	data(){
 		return{
-			name:"ueki"
+			id:'',
+			name:"",
+			showModal:false
 		}
 	},
-	methods:{
+	created(){
+		var query = Object.assign({}, this.$route.query)
+		console.log("QUERYID",query.id)
 
+		var params = new URLSearchParams();
+		params.append("id",query.id);
+		axios.post("http://localhost:8888/top/?id="+query.id,params)
+			.then(res => {
+				this.name=res.data.Name
+			}).catch(err => {
+				this.errorStatus = "Error: Network Error";
+			})
+	},
+	methods:{
 	},
 	components:{
-		Header
+		HelloWorld,
+		Header,
+		//Modal
 	}
 }
 </script>
@@ -100,7 +127,7 @@ export default{
 }
 
 .bookshelf-parsonal-wrapper{
-    width:79%;
+    width:78%;
     height:100%;
     float:right;
     border:2px solid rgb(65,166,90);
@@ -114,10 +141,15 @@ export default{
 	width:90px;
 	height:90px;
 	border-radius:50%;
+	margin-top:10px;
 }
 .iconBook{
 	padding:10px 10px;
 	width:25%;
 	height:100%;
+}
+.addbook{ cursor:pointer;
+	float:left;
+
 }
 </style>

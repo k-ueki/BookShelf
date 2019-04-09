@@ -15,12 +15,10 @@
 			</div>
 			<div class="image-form">
 				<!--
-				<input v-model="file" type="file" name="image" class="image">
+				<input v-model="newUser.file" type="file" name="image" class="image">
 				-->
 			</div>
-			<!---<input type="hidden" name="flag" value=1>-->
-			<div class="btnform"><button type="submit" class="signup-btn" v-on:click=signUp>登録{{name}}</button></div>
-
+			<div class="btnform"><button type="submit" class="signup-btn" v-on:click=signUp>登録</button></div>
 		</div>
 </template>
 <script src="../main.js"></script>
@@ -28,20 +26,39 @@
 import Vue from 'vue'
 import axios from 'axios'
 
+const newUser = function(){
+	this.name = '',
+	this.email = '',
+	this.password = '' //	//this.file = ''
+}
+
 export default{
 	pops:['name','password','email','file'],
 	name: "signup",
-	data:{
+	data(){
+		return{
+				name:'',
+				email:'',
+				password:''
+				//file:''
+		}
 	},
 	methods:{
 		signUp(){
-			//axios.post("../../../server/server.go",{
-			axios.post("http://localhost:8888/signup/",{
-				name: this.name,
-				password: this.password,
-				email: this.email
-			}).then(response => {
-				console.log(response)
+			let params = new URLSearchParams();
+			params.append("name",this.name);
+			params.append("password",this.password);
+			params.append("email",this.email);
+			//params.append("file",this.file);
+
+			axios.post("http://localhost:8888/signup/",params)
+			.then(response => {
+				if(response){
+					alert("登録が成功しました。MyPageに移行します。")
+					this.$router.push({path:"/top/",query: {id:response.data.ID}})
+				}else{
+					alert("登録に失敗しました。再度登録をお願いします。")
+				}
 			}).catch(error => {
 				this.errorStatus = "Error: Network Error";
 			})
