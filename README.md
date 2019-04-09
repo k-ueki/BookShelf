@@ -29,11 +29,17 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 作成動機
+```
 せっかく親書を購入してウキウキで家に帰ったらすでに家族や同居人が持っていた。。
 ということが数回あり、
 そこで家族等などのコミュニティごとに本棚を共有できたら解決できるのではないか
 と考えたことがきっかけ。
+```
 
 ### 使用技術
+```
 Server,API : Golang
+```
+```
 Front : Vue.js
+```
