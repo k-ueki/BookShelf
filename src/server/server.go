@@ -36,6 +36,8 @@ func main() {
 	r.HandleFunc("/", uctr.Login)
 	r.HandleFunc("/signup/", uctr.NewUser)
 	r.HandleFunc("/top/", uctr.SelectPersonalInfo)
+	r.HandleFunc("/top/book/", uctr.GetBooksInfo)
+	r.HandleFunc("/regist/book/", uctr.RegistBook)
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
 	http.ListenAndServe(":8888", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(r))

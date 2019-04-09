@@ -1,6 +1,9 @@
 <template>
         <div class="main-wrapper-top">
-	<Header/>
+			<!--
+			<Modal/>
+			-->
+			<Header/>
             <div class="parsonal-sp">
                 <!--top-image-->
 				<!--
@@ -13,6 +16,10 @@
             <div class="bookshelf-parsonal-wrapper">
                 <!--search-->
                 <div class="mini-header">
+					<!--
+					<div class="addbook" @click="showModal  = true">+</div>
+					-->
+					<router-link to="/regist/"><button>+</button></router-link>
 					<div class="searchWrap"><input type="search" name="word-search" class="word-search" placeholder="検索ワード"></div>
 					<div class="btnWrap"><button class="btn">検索</button></div>
 					<div class="selectWrap"><select name="refine">
@@ -38,8 +45,12 @@
         </div>
 </template>
 <script>
+import HelloWorld from '../components/HelloWorld.vue'
 import Header from '../components/header.vue'
+//import Modal from '../components/modal.vue'
+
 import axios from 'axios'
+
 
 export default{
 	name: 'top',
@@ -47,6 +58,7 @@ export default{
 		return{
 			id:'',
 			name:"",
+			showModal:false
 		}
 	},
 	created(){
@@ -63,10 +75,11 @@ export default{
 			})
 	},
 	methods:{
-
 	},
 	components:{
-		Header
+		HelloWorld,
+		Header,
+		//Modal
 	}
 }
 </script>
@@ -134,5 +147,9 @@ export default{
 	padding:10px 10px;
 	width:25%;
 	height:100%;
+}
+.addbook{ cursor:pointer;
+	float:left;
+
 }
 </style>

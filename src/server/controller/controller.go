@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -17,6 +18,7 @@ type User struct {
 	Stream chan *model.User
 }
 
+//http.Requestからbodyをmapで返す
 func body(r *http.Request) map[string]string {
 	len := r.ContentLength
 	body := make([]byte, len)
@@ -27,25 +29,29 @@ func body(r *http.Request) map[string]string {
 }
 func sep(str string, cha string) map[string]string {
 	tmp := strings.Split(str, cha)
-	//fmt.Println(tmp)
 
-	var el = make([]string, 3) //name,password,emailの3
-	var th = make([]string, 3)
+	var el = make([]string, len(tmp)) //name,password,emailの3
+	var th = make([]string, len(tmp))
 	for i, v := range tmp {
 		tmptmp := strings.Split(v, "=")
 		th[i] = tmptmp[0]
 		el[i] = tmptmp[1]
 	}
 	//fmt.Println(el)
-	res := map[string]string{
-		th[0]: el[0],
-		th[1]: el[1],
-		th[2]: el[2],
+	//res := map[string]string{
+	//	th[0]: el[0],
+	//	th[1]: el[1],
+	//	th[2]: el[2],
+	//}
+	var res = make(map[string]string, len(tmp))
+	for i := 0; i < len(tmp); i++ {
+		res[th[i]] = el[i]
 	}
+
 	return res
 }
 
-//新規登録
+//User新規登録
 func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	var usr = model.User{
@@ -70,6 +76,7 @@ func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(mar))
 }
 
+//ログイン
 func (u *User) Login(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	var usr = model.User{
@@ -87,6 +94,8 @@ func (u *User) Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, fmt.Sprint(res.ID))
 	//fmt.Fprintf(w, response)
 }
+
+//Personal Info をIDから取得
 func (u *User) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	//fmt.Println(body["id"])
@@ -102,4 +111,27 @@ func (u *User) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("USRINFO", usrInfo)
 	marUsr, _ := json.Marshal(usrInfo)
 	fmt.Fprintf(w, string(marUsr))
+}
+
+//本の新規登録。楽天Books API を内部で叩く
+func (u *User) GetBooksInfo(w http.ResponseWriter, r *http.Request) {
+	body := body(r)
+	fmt.Println(body)
+
+	applicationId := "1002996369552597120"
+	title := body["booksTitle"]
+	url := "https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?"
+	url += "applicationId=" + applicationId
+	url += "&title=" + title
+
+	resp, _ := http.Get(url)
+	defer resp.Body.Close()
+
+	bod, _ := ioutil.ReadAll(resp.Body)
+
+	fmt.Fprintf(w, string(bod))
+}
+func (u *User) RegistBook(w http.ResponseWriter, r *http.Request) {
+	body := body(r)
+	fmt.Println("BOBOBO", body)
 }

@@ -1,6 +1,5 @@
 <template>
         <header>
-            
                 <div class="head-container">
                     <div class="logo">MyBook</div>
                     <div class="header-list">

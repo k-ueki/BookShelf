@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Index from '@/pages/index'
 import Signup from '@/pages/signup'
 import Top from '@/pages/top'
+import Regist from '@/pages/regist'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,10 @@ const router = new VueRouter({
 		{
 			path: '/top/',
 			component: Top
+		},
+		{
+			path: '/regist/',
+			component:Regist
 		}
 	]
 })
