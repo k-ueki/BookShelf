@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -52,7 +53,8 @@ func sep(str string, cha string) map[string]string {
 	//}
 	var res = make(map[string]string, len(tmp))
 	for i := 0; i < len(tmp); i++ {
-		res[th[i]] = el[i]
+		tmp, _ := url.QueryUnescape(el[i])
+		res[th[i]] = tmp
 	}
 	return res
 }

@@ -9,7 +9,7 @@
 					<input class="booktitle" v-model="bookT"/>
 				</div>
 				<div class="btn-wrapper">
-					<button class="regisBtn" @click=regisBook>登録</button>
+					<button class="regisBtn" @click=searchBook>検索</button>
 				</div>
 			</div>
 		</div>
@@ -58,7 +58,7 @@ export default{
 				params.append("rakuten_page_url",item.itemUrl);
 				params.append("user_id",this.$route.params.id);
 
-				axios.post("http://localhost:8888/regist/bookapi/",params)
+				axios.post("http://localhost:8888/regist/book/",params)
 					.then(res => {
 
 					})
@@ -69,12 +69,12 @@ export default{
 				alert("登録をキャンセルしました。")
 			}
 		},
-		regisBook(){
+		searchBook(){
 			this.loading_act=true
 			var params = new URLSearchParams();
 			params.append("booksTitle",this.bookT);
 
-			axios.post("http://localhost:8888/top/book/",params)
+			axios.post("http://localhost:8888/top/bookapi/",params)
 				.then(res => {
 					console.log(res.data.Items)
 					this.items = res.data.Items
