@@ -1,7 +1,7 @@
 <template>
 <div id="modal">
 		<div class="overlay" @click="$emit('close')">
-			<div class="del">X</div>
+			<router-link to="/top/"><div class="del">X</div></router-link>
 			<div class="modal-main-content">
 				<h3>Resisration A Book</h3>
 				<div class="input-wrapper">
