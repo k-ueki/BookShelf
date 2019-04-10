@@ -13,7 +13,7 @@ import (
 	_ "github.com/k-ueki/app2/src/server/model"
 )
 
-type User struct {
+type DBHandler struct {
 	DB     *sql.DB
 	Stream chan *model.User
 }
@@ -37,7 +37,6 @@ func sep(str string, cha string) map[string]string {
 		th[i] = tmptmp[0]
 		el[i] = tmptmp[1]
 	}
-	//fmt.Println(el)
 	//res := map[string]string{
 	//	th[0]: el[0],
 	//	th[1]: el[1],
@@ -47,12 +46,11 @@ func sep(str string, cha string) map[string]string {
 	for i := 0; i < len(tmp); i++ {
 		res[th[i]] = el[i]
 	}
-
 	return res
 }
 
 //User新規登録
-func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) NewUser(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	var usr = model.User{
 		Name:     body["name"],
@@ -77,7 +75,7 @@ func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 //ログイン
-func (u *User) Login(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) Login(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	var usr = model.User{
 		Password: body["pass"],
@@ -96,7 +94,7 @@ func (u *User) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 //Personal Info をIDから取得
-func (u *User) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	//fmt.Println(body["id"])
 	tmp, _ := strconv.Atoi(body["id"])
@@ -114,7 +112,7 @@ func (u *User) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 //本の新規登録。楽天Books API を内部で叩く
-func (u *User) GetBooksInfo(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) GetBooksInfo(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	fmt.Println(body)
 
@@ -131,7 +129,20 @@ func (u *User) GetBooksInfo(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, string(bod))
 }
-func (u *User) RegistBook(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) RegistBook(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	fmt.Println("BOBOBO", body)
+
+	price, _ := strconv.Atoi(body["price"])
+	var book = model.Book{
+		Title:          body["title"],
+		Author:         body["author"],
+		Price:          price,
+		ImgUrl:         body["img_url"],
+		RakutenPageUrl: body["rakuten_page_url"],
+	}
+	_, err := book.InsertBook(u.DB)
+	if err != nil {
+		return
+	}
 }

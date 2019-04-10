@@ -31,7 +31,7 @@ func main() {
 	r := mux.NewRouter()
 	//handler
 	userInfo := make(chan *model.User)
-	uctr := &ctrl.User{DB: db, Stream: userInfo}
+	uctr := &ctrl.DBHandler{DB: db, Stream: userInfo}
 	//fmt.Println(uctr)
 	r.HandleFunc("/", uctr.Login)
 	r.HandleFunc("/signup/", uctr.NewUser)
