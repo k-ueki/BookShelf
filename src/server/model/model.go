@@ -35,7 +35,7 @@ func (u *User) Insert(db *sql.DB) (*User, error) {
 	}, nil
 }
 func (b *Book) InsertBook(db *sql.DB) (*Book, error) {
-	_, err := db.Exec("insert into books (title,author,price,img_url,rakuten_page_url) values (?,?,?,?,?)", b.Title, b.Author, b.Price, b.ImgUrl, b.RakutenPageUrl)
+	_, err := db.Exec("insert into books (title,author,price,img_url,rakuten_page_url,user_id) values (?,?,?,?,?,?)", b.Title, b.Author, b.Price, b.ImgUrl, b.RakutenPageUrl, b.User_id)
 	if err != nil {
 		return nil, err
 	}

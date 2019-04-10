@@ -14,7 +14,7 @@
 			</div>
 		</div>
 		<div v-show="loading_act" class="search_wrapper">
-			検索結果
+			検索結果{{ this.$route.params.id }}
 			<div v-show="loading && loading_act" class="loading">
 				Loading...
 			</div>
@@ -56,7 +56,7 @@ export default{
 				params.append("price",item.itemPrice);
 				params.append("img_url",item.largeImageUrl);
 				params.append("rakuten_page_url",item.itemUrl);
-				//params.append("user_id",)
+				params.append("user_id",this.$route.params.id);
 
 				axios.post("http://localhost:8888/regist/book/",params)
 					.then(res => {

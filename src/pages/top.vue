@@ -10,7 +10,7 @@
                 <img class="parsonal-icon" href="../../images/{$parsonal_info.image}">
 				-->
 				<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
-				<div class="parsonal-name">{{ name }}</div>
+				<div class="parsonal-name">{{ id }} - {{ name }}</div>
 
             </div>
             <div class="bookshelf-parsonal-wrapper">
@@ -19,7 +19,15 @@
 					<!--
 					<div class="addbook" @click="showModal  = true">+</div>
 					-->
+					<!--
 					<router-link to="/regist/"><button>+</button></router-link>
+					-->
+					<router-link :to="{
+						name:'Regist',
+						params:{
+							id: id 
+						}
+					}"><button>+</button></router-link>
 					<div class="searchWrap"><input type="search" name="word-search" class="word-search" placeholder="検索ワード"></div>
 					<div class="btnWrap"><button class="btn">検索</button></div>
 					<div class="selectWrap"><select name="refine">
@@ -63,12 +71,12 @@ export default{
 	},
 	created(){
 		var query = Object.assign({}, this.$route.query)
-		console.log("QUERYID",query.id)
 
 		var params = new URLSearchParams();
 		params.append("id",query.id);
 		axios.post("http://localhost:8888/top/?id="+query.id,params)
 			.then(res => {
+				this.id = res.data.ID
 				this.name=res.data.Name
 			}).catch(err => {
 				this.errorStatus = "Error: Network Error";

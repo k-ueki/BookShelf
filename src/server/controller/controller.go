@@ -131,15 +131,16 @@ func (u *DBHandler) GetBooksInfo(w http.ResponseWriter, r *http.Request) {
 }
 func (u *DBHandler) RegistBook(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
-	fmt.Println("BOBOBO", body)
 
 	price, _ := strconv.Atoi(body["price"])
+	user_id, _ := strconv.Atoi(body["user_id"])
 	var book = model.Book{
 		Title:          body["title"],
 		Author:         body["author"],
 		Price:          price,
 		ImgUrl:         body["img_url"],
 		RakutenPageUrl: body["rakuten_page_url"],
+		User_id:        user_id,
 	}
 	_, err := book.InsertBook(u.DB)
 	if err != nil {

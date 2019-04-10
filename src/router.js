@@ -24,7 +24,8 @@ const router = new VueRouter({
 			component: Top
 		},
 		{
-			path: '/regist/',
+			path: '/regist/:id',
+			name: "Regist",
 			component:Regist
 		}
 	]
