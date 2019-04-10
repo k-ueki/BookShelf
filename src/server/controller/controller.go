@@ -18,6 +18,14 @@ type DBHandler struct {
 	Stream chan *model.User
 }
 
+//return用
+type Res struct {
+	ID    int
+	Name  string
+	Email string
+	Books *model.Book
+}
+
 //http.Requestからbodyをmapで返す
 func body(r *http.Request) map[string]string {
 	len := r.ContentLength
@@ -95,19 +103,34 @@ func (u *DBHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 //Personal Info をIDから取得
 func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
+	//return用struct
+
+	var res Res
 	body := body(r)
-	//fmt.Println(body["id"])
+
 	tmp, _ := strconv.Atoi(body["id"])
 	var usr = model.User{
 		ID: tmp,
 	}
-	//fmt.Println("USR", usr)
+
 	usrInfo, err := usr.SelectById(u.DB)
 	if err != nil {
 		fmt.Println("Error!", err)
 	}
-	//fmt.Println("USRINFO", usrInfo)
-	marUsr, _ := json.Marshal(usrInfo)
+
+	booksinfo, err := usr.SelectPersonalBooks(u.DB)
+	if err != nil {
+		fmt.Println("Error!", err)
+	}
+	fmt.Println("BOOKSINFO", booksinfo)
+
+	res.ID = usrInfo.ID
+	res.Name = usrInfo.Name
+	res.Email = usrInfo.Email
+	res.Books = booksinfo
+	fmt.Println("JKJKJKJKJKJKJKKKKKKKKKKKKK", res)
+
+	marUsr, _ := json.Marshal(res)
 	fmt.Fprintf(w, string(marUsr))
 }
 

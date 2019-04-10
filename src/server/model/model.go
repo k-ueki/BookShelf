@@ -68,3 +68,13 @@ func (u *User) SelectIdByNameANDPass(db *sql.DB) (*User, error) {
 	}
 	return usr, nil
 }
+func (u *User) SelectPersonalBooks(db *sql.DB) (*Book, error) {
+	bo := &Book{}
+	//for i, _ := range bo {
+	//	err := db.QueryRow(`select title,author,price,img_url,rakuten_page_url from books where user_id=?`, u.ID).Scan(&bo[i].Title, &bo[i].Author, &bo[i].Price, &bo[i].ImgUrl, &bo[i].RakutenPageUrl)
+	//}
+	if err := db.QueryRow(`select title,author,price,img_url,rakuten_page_url from books where user_id=?`, u.ID).Scan(&bo.Title, &bo.Author, &bo.Price, &bo.ImgUrl, &bo.RakutenPageUrl); err != nil {
+		return nil, err
+	}
+	return bo, nil
+}

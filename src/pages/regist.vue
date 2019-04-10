@@ -14,7 +14,7 @@
 			</div>
 		</div>
 		<div v-show="loading_act" class="search_wrapper">
-			検索結果{{ this.$route.params.id }}
+			検索結果
 			<div v-show="loading && loading_act" class="loading">
 				Loading...
 			</div>
@@ -23,8 +23,8 @@
 					<img class="itemImage" :src="item.Item.largeImageUrl">
 					<div class="itemInfo">
 						<tr><li>{{ item.Item.title }}</li></tr>
-						<tr><li>{{item.Item.author}}</li></tr>
-						<tr><li>{{item.Item.itemPrice}}円</li></tr>
+						<tr><li>{{ item.Item.author }}</li></tr>
+						<tr><li>{{ item.Item.itemPrice }}円</li></tr>
 					</div>
 				</li>
 			</ul>
@@ -58,7 +58,7 @@ export default{
 				params.append("rakuten_page_url",item.itemUrl);
 				params.append("user_id",this.$route.params.id);
 
-				axios.post("http://localhost:8888/regist/book/",params)
+				axios.post("http://localhost:8888/regist/bookapi/",params)
 					.then(res => {
 
 					})
