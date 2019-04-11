@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"fmt"
 )
 
 type User struct {
@@ -68,13 +69,21 @@ func (u *User) SelectIdByNameANDPass(db *sql.DB) (*User, error) {
 	}
 	return usr, nil
 }
-func (u *User) SelectPersonalBooks(db *sql.DB) (*Book, error) {
-	bo := &Book{}
-	//for i, _ := range bo {
-	//	err := db.QueryRow(`select title,author,price,img_url,rakuten_page_url from books where user_id=?`, u.ID).Scan(&bo[i].Title, &bo[i].Author, &bo[i].Price, &bo[i].ImgUrl, &bo[i].RakutenPageUrl)
-	//}
-	if err := db.QueryRow(`select title,author,price,img_url,rakuten_page_url from books where user_id=?`, u.ID).Scan(&bo.Title, &bo.Author, &bo.Price, &bo.ImgUrl, &bo.RakutenPageUrl); err != nil {
-		return nil, err
+func (u *User) SelectPersonalBooks(db *sql.DB) ([]Book, error) {
+	books := []Book{}
+	bo := Book{}
+	fmt.Println("BOO", bo)
+
+	rows, _ := db.Query(`select title,author,price,img_url,rakuten_page_url from books where user_id=?`, u.ID)
+	fmt.Println("ROWS", rows)
+
+	for rows.Next() {
+		err := rows.Scan(&bo.Title, &bo.Author, &bo.Price, &bo.ImgUrl, &bo.RakutenPageUrl)
+		if err != nil {
+			fmt.Println("Error!", err)
+		}
+		books = append(books, bo)
 	}
-	return bo, nil
+	fmt.Println("BOOKS", books)
+	return books, nil
 }

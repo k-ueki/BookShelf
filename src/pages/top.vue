@@ -35,8 +35,20 @@
                         <option value=""></option>
 						</select></div>
                 </div>
+				<ul>
+					<li v-for="info in booksinfo">
+						<tr><img class="personalbooksIMG" :src="info.ImgUrl"></tr>
+						<tr class="personalbooks">{{ info.Title }}</tr>
+						<tr class="personalbooks">{{ info.Author }}</tr>
+						<tr class="personalbooks">{{ info.Price }}円</tr>
+						<!--
+						<tr class="personalbooks"><p>楽天ページ</p></tr>
+						{{info}}
+						-->
+					</li>
+				</ul>
+				<!--
 				<div class="dispInfo">
-					<!--display personal information-->
 					<div>
 						<div class="iconForTop">
 							<img class="iconBook" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
@@ -44,11 +56,11 @@
 						<div>exmpple</div>
 					</div>
 	                <div class="bookshelf">
-	                    <!--images-->
 						<div>hello exmaple!!</div>
 						<div>exmaple2</div>
 	                </div>
 				</div>
+				-->
             </div>
         </div>
 </template>
@@ -66,18 +78,21 @@ export default{
 		return{
 			id:'',
 			name:"",
-			showModal:false
+			showModal:false,
+			booksinfo:''
 		}
 	},
 	created(){
 		var query = Object.assign({}, this.$route.query)
-
 		var params = new URLSearchParams();
 		params.append("id",query.id);
+		console.log("QUERYID",query.id)
 		axios.post("http://localhost:8888/top/?id="+query.id,params)
 			.then(res => {
+				console.log(res.data)
 				this.id = res.data.ID
 				this.name=res.data.Name
+				this.booksinfo = res.data.Books
 			}).catch(err => {
 				this.errorStatus = "Error: Network Error";
 			})
@@ -159,5 +174,10 @@ export default{
 .addbook{ cursor:pointer;
 	float:left;
 
+}
+.personalbooks{
+	text-align:center;
+}
+.personalbooksIMG{
 }
 </style>

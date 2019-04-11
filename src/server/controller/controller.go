@@ -21,10 +21,10 @@ type DBHandler struct {
 
 //return用
 type Res struct {
-	ID    int
-	Name  string
-	Email string
-	Books *model.Book
+	ID    int          `json:id`
+	Name  string       `json:name`
+	Email string       `json:email`
+	Books []model.Book `json:books`
 }
 
 //http.Requestからbodyをmapで返す
@@ -105,8 +105,7 @@ func (u *DBHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 //Personal Info をIDから取得
 func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
-	//return用struct
-
+	fmt.Println("KKKKKKKKKKK")
 	var res Res
 	body := body(r)
 
@@ -130,7 +129,6 @@ func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
 	res.Name = usrInfo.Name
 	res.Email = usrInfo.Email
 	res.Books = booksinfo
-	fmt.Println("JKJKJKJKJKJKJKKKKKKKKKKKKK", res)
 
 	marUsr, _ := json.Marshal(res)
 	fmt.Fprintf(w, string(marUsr))
