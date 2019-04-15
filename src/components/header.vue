@@ -4,7 +4,7 @@
                     <div class="logo">〇〇</div>
                     <div class="header-list">
                         <ul>
-                            <li>A</li>
+                            <li style="cursor:pointer;">My Bookshelf</li>
                             <li>B</li>
                             <li>C</li>
                             <li>D</li>
@@ -14,6 +14,7 @@
                 <div class="search-form">
                     <input type="search" name="search" class="search" placeholder="検索ワード">
                     <button type="submit" class="search-btn">検索</button>
+					<button class="logout-btn">ログアウト</button>
                 </div>
                 <div class="icon">
 					<!--
@@ -25,7 +26,6 @@
 </template>
 <script>
 export default{
-
 }
 </script>
 <style>
@@ -72,6 +72,12 @@ li{
     background-color:rgba(255,255,255,0);
     color:rgb(0,0,0);
     border-color:rgba(0,0,0,0.3);
+}
+.logout-btn{
+	background-color:rgba(255,255,255,0);
+	color:rgb(0,0,0);
+	border-color:rgba(0,0,0,0.3);
+	margin-left:25px;
 }
 
 .icon{
