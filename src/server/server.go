@@ -37,6 +37,7 @@ func main() {
 	r.HandleFunc("/signup/", uctr.NewUser)
 	r.HandleFunc("/top/", uctr.SelectPersonalInfo)
 	r.HandleFunc("/top/bookapi/", uctr.GetBooksInfo)
+	//r.HandleFunc("/top/booksInfo/", uctr.DispBooksDetail)
 	r.HandleFunc("/regist/book/", uctr.RegistBook)
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))

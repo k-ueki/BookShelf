@@ -105,7 +105,6 @@ func (u *DBHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 //Personal Info をIDから取得
 func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("KKKKKKKKKKK")
 	var res Res
 	body := body(r)
 
@@ -170,3 +169,8 @@ func (u *DBHandler) RegistBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+//func (u *DBHandler) DispBooksDetail(w http.ResponseWriter, r *http.Request) {
+//	body := body(r)
+//	fmt.Println("BODY", body)
+//}

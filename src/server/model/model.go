@@ -13,6 +13,7 @@ type User struct {
 	//File     string `json:file`
 }
 type Book struct {
+	Id             int    `json:id`
 	Title          string `json:title`
 	Author         string `json:author`
 	Price          int    `json:price`
@@ -74,11 +75,11 @@ func (u *User) SelectPersonalBooks(db *sql.DB) ([]Book, error) {
 	bo := Book{}
 	fmt.Println("BOO", bo)
 
-	rows, _ := db.Query(`select title,author,price,img_url,rakuten_page_url from books where user_id=?`, u.ID)
+	rows, _ := db.Query(`select id,title,author,price,img_url,rakuten_page_url from books where user_id=?`, u.ID)
 	fmt.Println("ROWS", rows)
 
 	for rows.Next() {
-		err := rows.Scan(&bo.Title, &bo.Author, &bo.Price, &bo.ImgUrl, &bo.RakutenPageUrl)
+		err := rows.Scan(&bo.Id, &bo.Title, &bo.Author, &bo.Price, &bo.ImgUrl, &bo.RakutenPageUrl)
 		if err != nil {
 			fmt.Println("Error!", err)
 		}

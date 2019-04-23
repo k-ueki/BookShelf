@@ -4,6 +4,22 @@
 			<Modal/>
 			-->
 			<Header/>
+
+			<!--modal-->
+			<div class="overlay" v-show="showModal">HHHHH</div>
+			<div class="modal" v-show="showModal">
+				<div class="modalHeader">
+					<a style="cursor:pointer;" @click="closemodal">X</a>
+				</div>
+					<div class="modalinfo" align="center">
+						<tr><img class="personalbooksIMG" :src="clickedbook.ImgUrl"></tr>
+						<tr class="">{{ clickedbook.Title }}</tr>
+						<tr class="">{{ clickedbook.Author }}</tr>
+						<tr class="">{{ clickedbook.Price }}円</tr>
+						<tr class=""><a :href="clickedbook.RakutenPageUrl">楽天ページ</a></tr>
+					</div>
+			</div>
+
             <div class="parsonal-sp">
                 <!--top-image-->
 				<!--
@@ -11,7 +27,6 @@
 				-->
 				<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
 				<div class="parsonal-name">{{ id }} - {{ name }}</div>
-
             </div>
             <div class="bookshelf-parsonal-wrapper">
                 <!--search-->
@@ -36,9 +51,9 @@
 						</select></div>
                 </div>
 				<ul>
-					<li v-for="info in booksinfo">
+					<li class="personalbookWrapper" v-for="info in booksinfo" @click="bookDetail(info)" style="cursor:pointer;">
 						<tr><img class="personalbooksIMG" :src="info.ImgUrl"></tr>
-						<tr class="personalbooks">{{ info.Title }}</tr>
+						<tr class="personalbooks">{{info.Id}}{{ info.Title }}</tr>
 						<tr class="personalbooks">{{ info.Author }}</tr>
 						<tr class="personalbooks">{{ info.Price }}円</tr>
 						<!--
@@ -79,7 +94,8 @@ export default{
 			id:'',
 			name:"",
 			showModal:false,
-			booksinfo:''
+			booksinfo:'',
+			clickedbook:''
 		}
 	},
 	created(){
@@ -91,13 +107,31 @@ export default{
 			.then(res => {
 				console.log(res.data)
 				this.id = res.data.ID
-				this.name=res.data.Name
+				this.name = res.data.Name
 				this.booksinfo = res.data.Books
 			}).catch(err => {
 				this.errorStatus = "Error: Network Error";
 			})
 	},
 	methods:{
+		bookDetail(info){
+			this.clickedbook = info
+			if(!this.showModal){
+				this.showModal=true;
+			}
+//			var params = new URLSearchParams();
+//			params.append("id",info.Id);
+//			axios.post("http://localhost:8888/top/booksInfo/",params)
+//				.then(res => {
+//					console.log(res.data)
+//				}).catch(err => {
+//
+//				})
+//			console.log(info)
+		},
+		closemodal(){
+			this.showModal=false;
+		}
 	},
 	components:{
 		HelloWorld,
@@ -177,7 +211,40 @@ export default{
 }
 .personalbooks{
 	text-align:center;
+
 }
 .personalbooksIMG{
+}
+.personalbookWrapper{
+	border-bottom:1px solid rgba(0,0,0,0.4);
+	padding:5% 5%;
+}
+
+.modal{
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 30;
+    top: 25%;
+    left: 25%;
+	width:50%;
+	height:50%;
+	background:#ffff;
+}
+.overlay{
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+	z-index:15;
+	width:100%;
+	height:100%;
+	background:rgba(0,0,0,0.5);
+}
+.modalHeader{
+	text-align:right;
 }
 </style>
