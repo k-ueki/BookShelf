@@ -6,18 +6,23 @@
 			<Header/>
 
 			<!--modal-->
-			<div class="overlay" v-show="showModal">HHHHH</div>
+			<div class="overlay" v-show="showModal"></div>
 			<div class="modal" v-show="showModal">
-				<div class="modalHeader">
-					<a style="cursor:pointer;" @click="closemodal">X</a>
-				</div>
-					<div class="modalinfo" align="center">
+				<div>
+					<div class="modalHeader" style="float:right;">
+						<div style="cursor:pointer;" @click="closemodal">X</div>
+					</div>
+					<div class="modalinfo" align="center" style="float:right;">
+						<!--
+						-->
 						<tr><img class="personalbooksIMG" :src="clickedbook.ImgUrl"></tr>
 						<tr class="">{{ clickedbook.Title }}</tr>
 						<tr class="">{{ clickedbook.Author }}</tr>
 						<tr class="">{{ clickedbook.Price }}円</tr>
 						<tr class=""><a :href="clickedbook.RakutenPageUrl">楽天ページ</a></tr>
+						<tr class=""><button style="cursor:pointer;" @click="delBook(clickedbook)">削除</button></tr>
 					</div>
+				</div>
 			</div>
 
             <div class="parsonal-sp">
@@ -53,7 +58,7 @@
 				<ul>
 					<li class="personalbookWrapper" v-for="info in booksinfo" @click="bookDetail(info)" style="cursor:pointer;">
 						<tr><img class="personalbooksIMG" :src="info.ImgUrl"></tr>
-						<tr class="personalbooks">{{info.Id}}{{ info.Title }}</tr>
+						<tr class="personalbooks">{{ info.Title }}</tr>
 						<tr class="personalbooks">{{ info.Author }}</tr>
 						<tr class="personalbooks">{{ info.Price }}円</tr>
 						<!--
@@ -95,10 +100,12 @@ export default{
 			name:"",
 			showModal:false,
 			booksinfo:'',
-			clickedbook:''
+			clickedbook:'',
+			clickedbookID:'',
 		}
 	},
 	created(){
+		console.log(this.$route.query)
 		var query = Object.assign({}, this.$route.query)
 		var params = new URLSearchParams();
 		params.append("id",query.id);
@@ -116,6 +123,7 @@ export default{
 	methods:{
 		bookDetail(info){
 			this.clickedbook = info
+			this.clickedbookID = info.id
 			if(!this.showModal){
 				this.showModal=true;
 			}
@@ -131,6 +139,18 @@ export default{
 		},
 		closemodal(){
 			this.showModal=false;
+		},
+		delBook(book){
+			var params = new URLSearchParams();
+			params.append("delid",book.Id);
+			if(confirm(book.Title+" を削除しますか？")){
+				axios.post("http://localhost:8888/top/del/",params)
+					.then(res => {
+						this.showModal=false
+					}).catch(err => {
+
+					})
+			}
 		}
 	},
 	components:{
@@ -245,6 +265,6 @@ export default{
 	background:rgba(0,0,0,0.5);
 }
 .modalHeader{
-	text-align:right;
+	align:right;
 }
 </style>

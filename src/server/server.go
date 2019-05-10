@@ -36,6 +36,7 @@ func main() {
 	r.HandleFunc("/", uctr.Login)
 	r.HandleFunc("/signup/", uctr.NewUser)
 	r.HandleFunc("/top/", uctr.SelectPersonalInfo)
+	r.HandleFunc("/top/del/", uctr.DeleteBookByID)
 	r.HandleFunc("/top/bookapi/", uctr.GetBooksInfo)
 	//r.HandleFunc("/top/booksInfo/", uctr.DispBooksDetail)
 	r.HandleFunc("/regist/book/", uctr.RegistBook)

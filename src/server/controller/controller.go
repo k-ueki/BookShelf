@@ -132,6 +132,19 @@ func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
 	marUsr, _ := json.Marshal(res)
 	fmt.Fprintf(w, string(marUsr))
 }
+func (u *DBHandler) DeleteBookByID(w http.ResponseWriter, r *http.Request) {
+	body := body(r)
+	fmt.Println("JJ", body)
+
+	tmp, _ := strconv.Atoi(body["delid"])
+	var book = model.Book{
+		Id: tmp,
+	}
+	err := book.DeleteBook(u.DB)
+	if err != nil {
+		fmt.Println("Error! Deleting!", err)
+	}
+}
 
 //本の新規登録。楽天Books API を内部で叩く
 func (u *DBHandler) GetBooksInfo(w http.ResponseWriter, r *http.Request) {

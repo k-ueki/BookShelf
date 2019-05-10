@@ -1,7 +1,12 @@
 <template>
 <div id="modal">
+	<!--
 		<div class="overlay" @click="$emit('close')">
-			<router-link to="/top/"><div class="del">X</div></router-link>
+	-->
+		<div>
+
+			<router-link to="/top/?id=14"><div class="del">X</div></router-link>
+
 			<div class="modal-main-content">
 				<h3>Resisration A Book</h3>
 				<div class="input-wrapper">
@@ -35,7 +40,7 @@
 import axios from 'axios'
 
 export default{
-	el:"#modal",
+//	el:"#modal",
 	data(){
 		return{
 			test:'',
@@ -44,10 +49,13 @@ export default{
 			loading:true,
 		}
 	},
+	created(){
+//		var query = Object.assign({}, this.$route.query)
+//		console.log("LLLLLLLLLLLLLL",query)
+//		console.log("JKJKJKJKJKJ",query.id)
+	},
 	methods:{
 		clickItem(item){
-			console.log("OKOK")
-			console.log("JIJI",item)
 			if(confirm("登録しますか？")){
 				var params = new URLSearchParams();
 				item = item.Item

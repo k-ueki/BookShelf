@@ -43,6 +43,10 @@ func (b *Book) InsertBook(db *sql.DB) (*Book, error) {
 	}
 	return b, nil
 }
+func (b *Book) DeleteBook(db *sql.DB) error {
+	_, err := db.Exec("delete from books where id=?", b.Id)
+	return err
+}
 func (u *User) Check(db *sql.DB) (*User, error) {
 	//fmt.Println("JKJK", u)
 	//fmt.Println(u.Password)
