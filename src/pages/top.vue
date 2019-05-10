@@ -20,7 +20,8 @@
 						<tr class="">{{ clickedbook.Author }}</tr>
 						<tr class="">{{ clickedbook.Price }}円</tr>
 						<tr class=""><a :href="clickedbook.RakutenPageUrl">楽天ページ</a></tr>
-						<tr class=""><button style="cursor:pointer;" @click="delBook(clickedbook)">削除</button></tr>
+						{{indextmp}}
+						<tr class=""><button style="cursor:pointer;" @click="delBook(clickedbook,indextmp)">削除</button></tr>
 					</div>
 				</div>
 			</div>
@@ -56,7 +57,7 @@
 						</select></div>
                 </div>
 				<ul>
-					<li class="personalbookWrapper" v-for="info in booksinfo" @click="bookDetail(info)" style="cursor:pointer;">
+					<li class="personalbookWrapper" v-for="(info,index) in booksinfo" @click="bookDetail(info,index)" style="cursor:pointer;">
 						<tr><img class="personalbooksIMG" :src="info.ImgUrl"></tr>
 						<tr class="personalbooks">{{ info.Title }}</tr>
 						<tr class="personalbooks">{{ info.Author }}</tr>
@@ -101,7 +102,7 @@ export default{
 			showModal:false,
 			booksinfo:'',
 			clickedbook:'',
-			clickedbookID:'',
+			indextmp:'',
 		}
 	},
 	created(){
@@ -121,9 +122,12 @@ export default{
 			})
 	},
 	methods:{
-		bookDetail(info){
+//		test(index){
+//			this.booksinfo.splice(index,1)	
+//		},
+		bookDetail(info,index){
+			this.indextmp = index
 			this.clickedbook = info
-			this.clickedbookID = info.id
 			if(!this.showModal){
 				this.showModal=true;
 			}
@@ -140,7 +144,8 @@ export default{
 		closemodal(){
 			this.showModal=false;
 		},
-		delBook(book){
+		delBook(book,index){
+			this.booksinfo.splice(index,1)
 			var params = new URLSearchParams();
 			params.append("delid",book.Id);
 			if(confirm(book.Title+" を削除しますか？")){
