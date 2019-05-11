@@ -1,7 +1,12 @@
 <template>
 <div id="modal">
+	<!--
 		<div class="overlay" @click="$emit('close')">
-			<div class="del">X</div>
+	-->
+		<div>
+
+			<router-link to="/top/?id=14"><div class="del">X</div></router-link>
+
 			<div class="modal-main-content">
 				<h3>Resisration A Book</h3>
 				<div class="input-wrapper">
@@ -9,7 +14,7 @@
 					<input class="booktitle" v-model="bookT"/>
 				</div>
 				<div class="btn-wrapper">
-					<button class="regisBtn" @click=regisBook>登録</button>
+					<button class="regisBtn" @click=searchBook>検索</button>
 				</div>
 			</div>
 		</div>
@@ -23,8 +28,8 @@
 					<img class="itemImage" :src="item.Item.largeImageUrl">
 					<div class="itemInfo">
 						<tr><li>{{ item.Item.title }}</li></tr>
-						<tr><li>{{item.Item.author}}</li></tr>
-						<tr><li>{{item.Item.itemPrice}}円</li></tr>
+						<tr><li>{{ item.Item.author }}</li></tr>
+						<tr><li>{{ item.Item.itemPrice }}円</li></tr>
 					</div>
 				</li>
 			</ul>
@@ -35,7 +40,7 @@
 import axios from 'axios'
 
 export default{
-	el:"#modal",
+//	el:"#modal",
 	data(){
 		return{
 			test:'',
@@ -44,10 +49,13 @@ export default{
 			loading:true,
 		}
 	},
+	created(){
+//		var query = Object.assign({}, this.$route.query)
+//		console.log("LLLLLLLLLLLLLL",query)
+//		console.log("JKJKJKJKJKJ",query.id)
+	},
 	methods:{
 		clickItem(item){
-			console.log("OKOK")
-			console.log("JIJI",item)
 			if(confirm("登録しますか？")){
 				var params = new URLSearchParams();
 				item = item.Item
@@ -56,7 +64,7 @@ export default{
 				params.append("price",item.itemPrice);
 				params.append("img_url",item.largeImageUrl);
 				params.append("rakuten_page_url",item.itemUrl);
-				//params.append("user_id",)
+				params.append("user_id",this.$route.params.id);
 
 				axios.post("http://localhost:8888/regist/book/",params)
 					.then(res => {
@@ -69,12 +77,12 @@ export default{
 				alert("登録をキャンセルしました。")
 			}
 		},
-		regisBook(){
+		searchBook(){
 			this.loading_act=true
 			var params = new URLSearchParams();
 			params.append("booksTitle",this.bookT);
 
-			axios.post("http://localhost:8888/top/book/",params)
+			axios.post("http://localhost:8888/top/bookapi/",params)
 				.then(res => {
 					console.log(res.data.Items)
 					this.items = res.data.Items

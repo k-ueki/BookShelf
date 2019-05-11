@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -13,9 +14,17 @@ import (
 	_ "github.com/k-ueki/app2/src/server/model"
 )
 
-type User struct {
+type DBHandler struct {
 	DB     *sql.DB
 	Stream chan *model.User
+}
+
+//return用
+type Res struct {
+	ID    int          `json:id`
+	Name  string       `json:name`
+	Email string       `json:email`
+	Books []model.Book `json:books`
 }
 
 //http.Requestからbodyをmapで返す
@@ -37,7 +46,6 @@ func sep(str string, cha string) map[string]string {
 		th[i] = tmptmp[0]
 		el[i] = tmptmp[1]
 	}
-	//fmt.Println(el)
 	//res := map[string]string{
 	//	th[0]: el[0],
 	//	th[1]: el[1],
@@ -45,14 +53,14 @@ func sep(str string, cha string) map[string]string {
 	//}
 	var res = make(map[string]string, len(tmp))
 	for i := 0; i < len(tmp); i++ {
-		res[th[i]] = el[i]
+		tmp, _ := url.QueryUnescape(el[i])
+		res[th[i]] = tmp
 	}
-
 	return res
 }
 
 //User新規登録
-func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) NewUser(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	var usr = model.User{
 		Name:     body["name"],
@@ -77,7 +85,7 @@ func (u *User) NewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 //ログイン
-func (u *User) Login(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) Login(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	var usr = model.User{
 		Password: body["pass"],
@@ -96,25 +104,50 @@ func (u *User) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 //Personal Info をIDから取得
-func (u *User) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
+	var res Res
 	body := body(r)
-	//fmt.Println(body["id"])
+
 	tmp, _ := strconv.Atoi(body["id"])
 	var usr = model.User{
 		ID: tmp,
 	}
-	//fmt.Println("USR", usr)
+
 	usrInfo, err := usr.SelectById(u.DB)
 	if err != nil {
 		fmt.Println("Error!", err)
 	}
-	//fmt.Println("USRINFO", usrInfo)
-	marUsr, _ := json.Marshal(usrInfo)
+
+	booksinfo, err := usr.SelectPersonalBooks(u.DB)
+	if err != nil {
+		fmt.Println("Error!", err)
+	}
+	fmt.Println("BOOKSINFO", booksinfo)
+
+	res.ID = usrInfo.ID
+	res.Name = usrInfo.Name
+	res.Email = usrInfo.Email
+	res.Books = booksinfo
+
+	marUsr, _ := json.Marshal(res)
 	fmt.Fprintf(w, string(marUsr))
+}
+func (u *DBHandler) DeleteBookByID(w http.ResponseWriter, r *http.Request) {
+	body := body(r)
+	fmt.Println("JJ", body)
+
+	tmp, _ := strconv.Atoi(body["delid"])
+	var book = model.Book{
+		Id: tmp,
+	}
+	err := book.DeleteBook(u.DB)
+	if err != nil {
+		fmt.Println("Error! Deleting!", err)
+	}
 }
 
 //本の新規登録。楽天Books API を内部で叩く
-func (u *User) GetBooksInfo(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) GetBooksInfo(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	fmt.Println(body)
 
@@ -131,7 +164,26 @@ func (u *User) GetBooksInfo(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, string(bod))
 }
-func (u *User) RegistBook(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) RegistBook(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
-	fmt.Println("BOBOBO", body)
+
+	price, _ := strconv.Atoi(body["price"])
+	user_id, _ := strconv.Atoi(body["user_id"])
+	var book = model.Book{
+		Title:          body["title"],
+		Author:         body["author"],
+		Price:          price,
+		ImgUrl:         body["img_url"],
+		RakutenPageUrl: body["rakuten_page_url"],
+		User_id:        user_id,
+	}
+	_, err := book.InsertBook(u.DB)
+	if err != nil {
+		return
+	}
 }
+
+//func (u *DBHandler) DispBooksDetail(w http.ResponseWriter, r *http.Request) {
+//	body := body(r)
+//	fmt.Println("BODY", body)
+//}

@@ -31,12 +31,14 @@ func main() {
 	r := mux.NewRouter()
 	//handler
 	userInfo := make(chan *model.User)
-	uctr := &ctrl.User{DB: db, Stream: userInfo}
+	uctr := &ctrl.DBHandler{DB: db, Stream: userInfo}
 	//fmt.Println(uctr)
 	r.HandleFunc("/", uctr.Login)
 	r.HandleFunc("/signup/", uctr.NewUser)
 	r.HandleFunc("/top/", uctr.SelectPersonalInfo)
-	r.HandleFunc("/top/book/", uctr.GetBooksInfo)
+	r.HandleFunc("/top/del/", uctr.DeleteBookByID)
+	r.HandleFunc("/top/bookapi/", uctr.GetBooksInfo)
+	//r.HandleFunc("/top/booksInfo/", uctr.DispBooksDetail)
 	r.HandleFunc("/regist/book/", uctr.RegistBook)
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
