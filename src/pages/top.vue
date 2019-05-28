@@ -48,7 +48,9 @@
 						params:{
 							id: id 
 						}
-					}"><button>+</button></router-link>
+					}">
+						<button>+</button></router-link>
+						<button>community add</button>
 					<div class="searchWrap"><input type="search" name="word-search" class="word-search" placeholder="検索ワード"></div>
 					<div class="btnWrap"><button class="btn">検索</button></div>
 					<div class="selectWrap"><select name="refine">
