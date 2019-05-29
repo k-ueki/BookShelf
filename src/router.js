@@ -5,6 +5,7 @@ import Index from '@/pages/index'
 import Signup from '@/pages/signup'
 import Top from '@/pages/top'
 import Regist from '@/pages/regist'
+import CommunityAdd from '@/pages/community/add'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ const router = new VueRouter({
 			path: '/regist/:id?',
 			name: "Regist",
 			component:Regist
+		},
+		{
+			path:'/community/add/',
+			name:"CommunityAdd",
+			component:CommunityAdd
 		}
 	]
 })
