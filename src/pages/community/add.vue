@@ -14,8 +14,16 @@
 					<input class="comName" /></div>
 					<div class="comMem" style="float:left;">Community Member :   
 						<div v-for="c in count" style=";">
-							<input class="comMembers"/>
-							<button class="" @click="add()">+</button>
+							<input class="comMembers" placeholder="@name" v-model="addname"/>
+							<button class="" @click="count+=1">+{{addname}}</button>
+								<!--
+							<ul v-show="flag" style="display:block;">
+								<li v-bind:class="Pclass" v-for="person in people" style="cursor:pointer;" @mouseover="focus()" @click="select(person)">
+									{{person.ID}}  {{person.Name}}
+								</li>
+							</ul>
+								-->
+							<div v-bind:class="Pclass" v-show="flag" v-for="person in people" style="cursor:pointer;" @mouseover="focus()" @click="select(person)">{{person.ID}} {{person.Name}}</div>
 						</div>
 					</div>
 				</div>
@@ -23,22 +31,6 @@
 					<button class="create-com-button" style="">決定</button>
 				</div>
 			</div>
-		</div>
-		<div v-show="loading_act" class="search_wrapper">
-			検索結果
-			<div v-show="loading && loading_act" class="loading">
-				Loading...
-			</div>
-			<ul v-show="!loading">
-				<li class="list" v-for="item in items" style="cursor:pointer;" @click="clickItem(item)">	
-					<img class="itemImage" :src="item.Item.largeImageUrl">
-					<div class="itemInfo">
-						<tr><li>{{ item.Item.title }}</li></tr>
-						<tr><li>{{ item.Item.author }}</li></tr>
-						<tr><li>{{ item.Item.itemPrice }}円</li></tr>
-					</div>
-				</li>
-			</ul>
 		</div>
 </div>
 </template>
@@ -54,13 +46,27 @@ export default{
 			loading_act:false,
 			loading:true,
 			count:1,
+			addname:"",
+			people:[],
+			flag:false,
+			Pclass:'',
 		}
 	},
 	created(){
+		axios.get("http://localhost:8888/community/add/")
+			.then(response =>{
+				console.log(response.data)
+				this.people = response.data;
+				this.flag=true;
+			})
 	},
 	methods:{
-		add(){
-			this.count++
+		select(person){
+			this.addname=person.Name;
+			this.flag=false;
+		},
+		focus(){
+			this.Pclass = "changeback"	
 		},
 		clickItem(item){
 			if(confirm("登録しますか？")){
@@ -102,8 +108,7 @@ export default{
 	}
 }
 </script>
-<style>
-
+<style> 
 .del{
 	cursor:pointer;
 	float:right;
@@ -144,5 +149,9 @@ h3 {
 .search_wrapper{
 	width:75%;
 	margin:auto auto;
+}
+
+.changeback{
+	background-color:red;
 }
 </style>

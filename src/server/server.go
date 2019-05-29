@@ -41,6 +41,8 @@ func main() {
 	//r.HandleFunc("/top/booksInfo/", uctr.DispBooksDetail)
 	r.HandleFunc("/regist/book/", uctr.RegistBook)
 
+	r.HandleFunc("/community/add/", uctr.SelectAllPerson)
+
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
 	http.ListenAndServe(":8888", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(r))
 }
