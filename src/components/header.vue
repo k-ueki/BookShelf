@@ -1,7 +1,7 @@
 <template>
         <header>
                 <div class="head-container">
-                    <div class="logo">〇〇</div>
+                    <div class="logo">〇</div>
                     <div class="header-list">
                         <ul>
                             <li style="cursor:pointer;">My Bookshelf</li>
