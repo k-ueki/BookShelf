@@ -182,6 +182,13 @@ func (u *DBHandler) RegistBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+func (u *DBHandler) SelectAllPerson(h http.ResponseWriter, r *http.Request) {
+	var allperson = model.User{}
+
+	res, _ := allperson.SelectAllPerson(u.DB)
+	mar, _ := json.Marshal(res)
+	fmt.Fprintf(h, string(mar))
+}
 
 //func (u *DBHandler) DispBooksDetail(w http.ResponseWriter, r *http.Request) {
 //	body := body(r)

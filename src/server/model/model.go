@@ -24,8 +24,6 @@ type Book struct {
 
 func (u *User) Insert(db *sql.DB) (*User, error) {
 	_, err := db.Exec("insert into users (username,email,password) values (?,?,?)", u.Name, u.Email, u.Password)
-	//fmt.Println("RES", res)
-	//fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
@@ -48,14 +46,10 @@ func (b *Book) DeleteBook(db *sql.DB) error {
 	return err
 }
 func (u *User) Check(db *sql.DB) (*User, error) {
-	//fmt.Println("JKJK", u)
-	//fmt.Println(u.Password)
-
 	usr := &User{}
 	if err := db.QueryRow(`select id,username,email,password from users where email=? AND password=?`, u.Email, u.Password).Scan(&usr.ID, &usr.Name, &usr.Email, &usr.Password); err != nil {
 		return nil, err
 	}
-	//fmt.Println("JJJ", usr)
 	return usr, nil
 }
 func (u *User) SelectById(db *sql.DB) (*User, error) {
@@ -77,10 +71,8 @@ func (u *User) SelectIdByNameANDPass(db *sql.DB) (*User, error) {
 func (u *User) SelectPersonalBooks(db *sql.DB) ([]Book, error) {
 	books := []Book{}
 	bo := Book{}
-	fmt.Println("BOO", bo)
 
 	rows, _ := db.Query(`select id,title,author,price,img_url,rakuten_page_url from books where user_id=?`, u.ID)
-	fmt.Println("ROWS", rows)
 
 	for rows.Next() {
 		err := rows.Scan(&bo.Id, &bo.Title, &bo.Author, &bo.Price, &bo.ImgUrl, &bo.RakutenPageUrl)
@@ -91,4 +83,23 @@ func (u *User) SelectPersonalBooks(db *sql.DB) ([]Book, error) {
 	}
 	fmt.Println("BOOKS", books)
 	return books, nil
+}
+func (u *User) SelectAllPerson(db *sql.DB) ([]User, error) {
+	Users := []User{}
+	us := User{}
+
+	rows, err := db.Query(`select id,username from users`)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&us.ID, &us.Name)
+		if err != nil {
+			return nil, err
+		}
+		Users = append(Users, us)
+	}
+
+	return Users, nil
 }
