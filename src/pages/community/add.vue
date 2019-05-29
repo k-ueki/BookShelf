@@ -12,9 +12,11 @@
 				<div class="input-wrapper">
 					<div class="comNameflame">Community Name   :   
 					<input class="comName" /></div>
-					<div class="comMem">Community Members : 
-						<input class="comMembers"/>
-						<button class="">+</button>
+					<div class="comMem" style="float:left;">Community Member :   
+						<div v-for="c in count" style=";">
+							<input class="comMembers"/>
+							<button class="" @click="add()">+</button>
+						</div>
 					</div>
 				</div>
 				<div class="btn-wrapper" style="text-align:center;">
@@ -51,11 +53,15 @@ export default{
 			items:[],
 			loading_act:false,
 			loading:true,
+			count:1,
 		}
 	},
 	created(){
 	},
 	methods:{
+		add(){
+			this.count++
+		},
 		clickItem(item){
 			if(confirm("登録しますか？")){
 				var params = new URLSearchParams();
