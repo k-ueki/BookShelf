@@ -132,10 +132,16 @@ export default{
 
 				})
 		},
-//		decide(){
-//			var params = new URLSearchParams();
-//			params.append("CommunityName",this.CommunityName);
-//		}
+		decide(){
+			var params = new URLSearchParams();
+			params.append("CommunityName",this.CommunityName);
+			params.append("CommunityMembers",this.addname);
+
+			axios.post("http://localhost:8888/community/add/",params)
+				.then(res =>{
+
+				})
+		}
 	}
 }
 </script>
