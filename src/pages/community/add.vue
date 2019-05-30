@@ -11,11 +11,11 @@
 				<h3>Create A Community</h3>
 				<div class="input-wrapper">
 					<div class="comNameflame">Community Name   :   
-					<input class="comName" /></div>
+					<input class="comName" v-model="CommunityName"/></div>
 					<div class="comMem" style="float:left;">Community Member :   
 						<div v-for="c in count" style=";">
-							<input class="comMembers" placeholder="@name" v-model="addname"/>
-							<button class="" @click="count+=1">+{{addname}}</button>
+							<input class="comMembers" placeholder="@name" v-model="addname" @blur="blur()"/>
+							<button class="" @click="count+=1">+</button>
 								<!--
 							<ul v-show="flag" style="display:block;">
 								<li v-bind:class="Pclass" v-for="person in people" style="cursor:pointer;" @mouseover="focus()" @click="select(person)">
@@ -23,12 +23,16 @@
 								</li>
 							</ul>
 								-->
-							<div v-bind:class="Pclass" v-show="flag" v-for="person in people" style="cursor:pointer;" @mouseover="focus()" @click="select(person)">{{person.ID}} {{person.Name}}</div>
+							<div v-bind:class="" v-show="flag" v-for="person in filteredpeople" style="cursor:pointer;" 
+								  @mouseleave="leave()" @mouseover="focus()" @click="select(person)"><div v-bind:class="Pclass">{{person.ID}} {{person.Name}}</div></div>
 						</div>
 					</div>
 				</div>
 				<div class="btn-wrapper" style="text-align:center;">
-					<button class="create-com-button" style="">決定</button>
+					 <button class="create-com-button" style="" @click="decide()">決定</button>
+					<!--
+					<div v-for="person in filteredpeople">{{ person.ID  }}  {{person.Name}}</div>
+					-->
 				</div>
 			</div>
 		</div>
@@ -46,27 +50,50 @@ export default{
 			loading_act:false,
 			loading:true,
 			count:1,
+			CommunityName:'',
 			addname:"",
 			people:[],
 			flag:false,
 			Pclass:'',
 		}
 	},
+	computed:{
+		filteredpeople:function(){
+			if(this.addname!=""){
+				this.flag=true;
+				console.log(this.addname)
+			}
+			var pp = [];
+			for(var i in this.people){
+				var person = this.people[i];
+
+				if(person.Name.indexOf(this.addname)!==-1){
+					pp.push(person);
+				}
+			}
+			return pp;
+		}
+	},
 	created(){
 		axios.get("http://localhost:8888/community/add/")
 			.then(response =>{
-				console.log(response.data)
 				this.people = response.data;
-				this.flag=true;
+				//this.flag=true;
+				this.flag = false;
 			})
 	},
 	methods:{
+		blur(){
+			this.flag=false
+		},
 		select(person){
 			this.addname=person.Name;
 			this.flag=false;
-		},
-		focus(){
+		}, focus(){
 			this.Pclass = "changeback"	
+		},
+		leave(){
+			this.Pclass = "general"
 		},
 		clickItem(item){
 			if(confirm("登録しますか？")){
@@ -104,7 +131,11 @@ export default{
 				.catch(err => {
 
 				})
-		}	
+		},
+//		decide(){
+//			var params = new URLSearchParams();
+//			params.append("CommunityName",this.CommunityName);
+//		}
 	}
 }
 </script>
@@ -153,5 +184,8 @@ h3 {
 
 .changeback{
 	background-color:red;
+}
+.general{
+
 }
 </style>
