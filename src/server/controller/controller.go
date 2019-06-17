@@ -18,6 +18,10 @@ type DBHandler struct {
 	DB     *sql.DB
 	Stream chan *model.User
 }
+type Community struct {
+	Community_ID   int
+	Community_Name string
+}
 
 //return用
 type Res struct {
@@ -29,10 +33,10 @@ type Res struct {
 
 //http.Requestからbodyをmapで返す
 func body(r *http.Request) map[string]string {
+	fmt.Println(r.ContentLength)
 	len := r.ContentLength
 	body := make([]byte, len)
 	r.Body.Read(body)
-	//fmt.Println(string(body))
 	tmp := string(body)
 	return sep(tmp, "&")
 }
@@ -189,8 +193,15 @@ func (u *DBHandler) SelectAllPerson(h http.ResponseWriter, r *http.Request) {
 	mar, _ := json.Marshal(res)
 	fmt.Fprintf(h, string(mar))
 }
+func (u *DBHandler) Community(w http.ResponseWriter, r *http.Request) {
 
-//func (u *DBHandler) DispBooksDetail(w http.ResponseWriter, r *http.Request) {
-//	body := body(r)
-//	fmt.Println("BODY", body)
-//}
+	switch r.Method {
+	case "GET":
+		u.SelectAllPerson(w, r)
+	case "POST":
+		u.ResistCommunity(w, r)
+	}
+
+}
+func (u *DBHandler) ResistCommunity(w http.ResponseWriter, r *http.Request) {
+}
