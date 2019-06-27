@@ -54,8 +54,13 @@ export default{
 			axios.post("http://localhost:8888/",params)
 				.then(response => {
 					this.id = response.data
-					if(!!response.data){
+					if(!!response.data && response.data!="ERROR"){
 						this.$router.push({path:"/top/",query: {id:response.data}})
+					}
+					if(response.data=="ERROR"){
+						alert("入力エラー")
+						this.email=""
+						this.pass=""
 					}
 				}).catch(error=>{
 					this.errorStatus = "Error: Network Error";
