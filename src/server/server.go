@@ -15,12 +15,12 @@ import (
 
 func main() {
 	var DSN string = "root:@/uchihon"
+	r := mux.NewRouter()
 
 	db, err := sql.Open("mysql", DSN)
 	if err != nil {
 		log.Fatal(err)
 	}
-	//fmt.Println(db)
 	defer db.Close()
 
 	//CORS
@@ -28,11 +28,10 @@ func main() {
 	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
 	allowedHeaders := handlers.AllowedHeaders([]string{"content-type"})
 
-	r := mux.NewRouter()
 	//handler
 	userInfo := make(chan *model.User)
 	uctr := &ctrl.DBHandler{DB: db, Stream: userInfo}
-	//fmt.Println(uctr)
+
 	r.HandleFunc("/", uctr.Login)
 	r.HandleFunc("/signup/", uctr.NewUser)
 	r.HandleFunc("/top/", uctr.SelectPersonalInfo)
@@ -40,9 +39,8 @@ func main() {
 	r.HandleFunc("/top/bookapi/", uctr.GetBooksInfo)
 	//r.HandleFunc("/top/booksInfo/", uctr.DispBooksDetail)
 	r.HandleFunc("/regist/book/", uctr.RegistBook)
-
 	//r.HandleFunc("/community/add/", uctr.SelectAllPerson)
-	r.HandleFunc("/community/add/", uctr.Community)
+	//r.HandleFunc("/community/add/", uctr.Community)
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
 	http.ListenAndServe(":8888", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(r))

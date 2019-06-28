@@ -25,10 +25,11 @@ type Community struct {
 
 //return用
 type Res struct {
-	ID    int          `json:id`
-	Name  string       `json:name`
-	Email string       `json:email`
-	Books []model.Book `json:books`
+	ID     int          `json:id`
+	Name   string       `json:name`
+	UserId string       `json:userid`
+	Email  string       `json:email`
+	Books  []model.Book `json:books`
 }
 
 //http.Requestからbodyをmapで返す
@@ -50,11 +51,6 @@ func sep(str string, cha string) map[string]string {
 		th[i] = tmptmp[0]
 		el[i] = tmptmp[1]
 	}
-	//res := map[string]string{
-	//	th[0]: el[0],
-	//	th[1]: el[1],
-	//	th[2]: el[2],
-	//}
 	var res = make(map[string]string, len(tmp))
 	for i := 0; i < len(tmp); i++ {
 		tmp, _ := url.QueryUnescape(el[i])
@@ -68,16 +64,34 @@ func (u *DBHandler) NewUser(w http.ResponseWriter, r *http.Request) {
 	body := body(r)
 	var usr = model.User{
 		Name:     body["name"],
+		UserId:   body["userid"],
 		Password: body["password"],
 		Email:    body["email"],
 	}
-	inserted, err := usr.Insert(u.DB)
+	flag, err, clu := usr.CheckPreDB(u.DB)
 	if err != nil {
-		fmt.Println(inserted)
+		fmt.Println(err)
+		return
+	}
+	if flag == false {
+		switch clu {
+		case "email":
+			fmt.Fprintf(w, "このメールアドレスはすでに登録されています")
+			return
+		case "userid":
+			fmt.Fprintf(w, "このユーザーIDはすでに使用されています")
+			return
+		case "useridemail":
+			fmt.Fprintf(w, "このメールアドレスとユーザーIDはすでに使用されています")
+			return
+		}
+	}
+
+	_, err = usr.Insert(u.DB)
+	if err != nil {
 		fmt.Println("FAILED!!!", err)
 		return
 	}
-	//fmt.Println("SUCCESS", inserted)
 
 	res, err := usr.SelectIdByNameANDPass(u.DB)
 	if err != nil {
@@ -95,16 +109,13 @@ func (u *DBHandler) Login(w http.ResponseWriter, r *http.Request) {
 		Password: body["pass"],
 		Email:    body["email"],
 	}
-	res, err := usr.Check(u.DB)
+	res, err := usr.GetInfoByEmailPass(u.DB)
 	if err != nil {
 		fmt.Println("ERROR!", err)
+		fmt.Fprintf(w, "ERROR")
 		return
 	}
-	//fmt.Println("CHECKED", res)
-
-	//response := fmt.Sprintf("%d,%s", res.ID, res.Name)
 	fmt.Fprintf(w, fmt.Sprint(res.ID))
-	//fmt.Fprintf(w, response)
 }
 
 //Personal Info をIDから取得
@@ -129,6 +140,7 @@ func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("BOOKSINFO", booksinfo)
 
 	res.ID = usrInfo.ID
+	res.UserId = usrInfo.UserId
 	res.Name = usrInfo.Name
 	res.Email = usrInfo.Email
 	res.Books = booksinfo
@@ -193,15 +205,51 @@ func (u *DBHandler) SelectAllPerson(h http.ResponseWriter, r *http.Request) {
 	mar, _ := json.Marshal(res)
 	fmt.Fprintf(h, string(mar))
 }
-func (u *DBHandler) Community(w http.ResponseWriter, r *http.Request) {
 
-	switch r.Method {
-	case "GET":
-		u.SelectAllPerson(w, r)
-	case "POST":
-		u.ResistCommunity(w, r)
-	}
+//=========================
+// Community
+// ========================
 
-}
-func (u *DBHandler) ResistCommunity(w http.ResponseWriter, r *http.Request) {
-}
+//func (u *DBHandler) Community(w http.ResponseWriter, r *http.Request) {
+//	switch r.Method {
+//	case "GET":
+//		u.SelectAllPerson(w, r)
+//	case "POST":
+//		u.ResisterCommunity(w, r)
+//	}
+//
+//}
+
+//func (u *DBHandler) ResisterCommunity(w http.ResponseWriter, r *http.Request) {
+//	body := body(r)
+//
+//	tmp := len(body["CommunityMembers"])
+//	members := strconv.Itoa(tmp)
+//
+//	var com = model.Community{
+//		Name: body["CommunityName"],
+//		//Pass:  body["Pass"],
+//		Users: members,
+//	}
+//	if body["Pass"] != "" {
+//		com.Pass = body["Pass"]
+//	}
+//
+//	var usr = model.User{
+//		Name: body["CommunityMembers"],
+//	}
+//	userinfo, _ := usr.SelectUserIDByName(u.DB)
+//	fmt.Println("userID", userinfo)
+//
+//	switch members {
+//	case "1":
+//		com.User1 = body["CommunityMembers"]
+//	}
+//
+//	err := com.Resister(u.DB)
+//	if err != nil {
+//		fmt.Println(err)
+//	}
+//
+//	fmt.Fprintf(w, "OK")
+//}
