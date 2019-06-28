@@ -5,6 +5,10 @@
 				<li class="required">*必須</li>
 				<input v-model="name" type="text" name="name" class="name" placeholder="名前" value="">
 			</div>
+			<div class="userid-form">
+				<li class="required">*必須</li>
+				<input v-model="userid" type="text" name="userid" class="name" placeholder="ユーザーID" value="">
+			</div>
 			<div class="pass-form">
 				<li class="required">*必須</li>
 				<input v-model="password" type="password" name="pass" class="pass" placeholder="パスワード" value="">
@@ -38,6 +42,7 @@ export default{
 	data(){
 		return{
 				name:'',
+				userid:'',
 				email:'',
 				password:''
 				//file:''
@@ -45,24 +50,37 @@ export default{
 	},
 	methods:{
 		signUp(){
-			let params = new URLSearchParams();
-			params.append("name",this.name);
-			params.append("password",this.password);
-			params.append("email",this.email);
-			//params.append("file",this.file);
+			if(this.name=="" || this.userid=="" || this.password=="" || this.email==""){
+				alert("入力エラー")
+			}else{
+				let params = new URLSearchParams();
+				params.append("name",this.name);
+				params.append("userid",this.userid);
+				params.append("password",this.password);
+				params.append("email",this.email);
+				//params.append("file",this.file);
 
-			axios.post("http://localhost:8888/signup/",params)
-			.then(response => {
-				if(response){
-					alert("登録が成功しました。MyPageに移行します。")
-					this.$router.push({path:"/top/",query: {id:response.data.ID}})
-				}else{
-					alert("登録に失敗しました。再度登録をお願いします。")
-				}
-			}).catch(error => {
-				this.errorStatus = "Error: Network Error";
-			})
-		}
+				axios.post("http://localhost:8888/signup/",params)
+				.then(response => {
+					if(response){
+						if(response.data === "このメールアドレスはすでに登録されています"){
+							alert(response.data)
+						}else if(response.data === "このユーザーIDはすでに使用されています"){
+							alert(response.data)
+						}else if(response.data ==="このメールアドレスとユーザーIDはすでに使用されています"){
+							alert(response.data)
+						}else{
+							alert("登録が成功しました。MyPageに移行します。")
+							this.$router.push({path:"/top/",query: {id:response.data.ID}})
+						}
+					}else{
+						alert("登録に失敗しました。再度登録をお願いします。")
+					}
+				}).catch(error => {
+					this.errorStatus = "Error: Network Error";
+				})
+			}
+		},
 	}
 }
 </script>

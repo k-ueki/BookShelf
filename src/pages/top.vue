@@ -33,6 +33,7 @@
 				-->
 				<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
 				<div class="parsonal-name">{{ id }} - {{ name }}</div>
+				<div class="">{{userid}}</div>
             </div>
             <div class="bookshelf-parsonal-wrapper">
                 <!--search-->
@@ -109,6 +110,7 @@ export default{
 			booksinfo:'',
 			clickedbook:'',
 			indextmp:'',
+			userid:'',
 		}
 	},
 	created(){
@@ -122,6 +124,7 @@ export default{
 				console.log(res.data)
 				this.id = res.data.ID
 				this.name = res.data.Name
+				this.userid = '@'+res.data.UserId
 				this.booksinfo = res.data.Books
 			}).catch(err => {
 				this.errorStatus = "Error: Network Error";
