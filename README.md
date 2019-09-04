@@ -8,6 +8,11 @@
 と考えたことがきっかけ。
 ```
 
+### port
+- Server :8888
+- Front :8080
+- MySQL :3306
+
 ### 使用技術
 ```
 Server,API : Golang
@@ -15,33 +20,8 @@ Server,API : Golang
 ```
 Front : Vue.js
 ```
-
-## Project setup
 ```
-npm install
+認証周り:firebase
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
