@@ -1,27 +1,35 @@
 package main
 
 import (
-	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-
-	ctrl "github.com/k-ueki/app2/src/server/controller"
-	"github.com/k-ueki/app2/src/server/model"
+	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
+	controller "github.com/k-ueki/app2/src/server/controller"
 )
 
 func main() {
 	var DSN string = "root:@/uchihon"
 	r := mux.NewRouter()
 
-	db, err := sql.Open("mysql", DSN)
+	db, err := sqlx.Open("mysql", DSN)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
+	err = godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	test := os.Getenv("TEST")
+	fmt.Println("test", test)
 
 	//CORS
 	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:8080"})
@@ -29,16 +37,18 @@ func main() {
 	allowedHeaders := handlers.AllowedHeaders([]string{"content-type"})
 
 	//handler
-	userInfo := make(chan *model.User)
-	uctr := &ctrl.DBHandler{DB: db, Stream: userInfo}
+	// userInfo := make(chan *model.User)
 
-	r.HandleFunc("/", uctr.Login)
-	r.HandleFunc("/signup/", uctr.NewUser)
-	r.HandleFunc("/top/", uctr.SelectPersonalInfo)
-	r.HandleFunc("/top/del/", uctr.DeleteBookByID)
-	r.HandleFunc("/top/bookapi/", uctr.GetBooksInfo)
-	//r.HandleFunc("/top/booksInfo/", uctr.DispBooksDetail)
-	r.HandleFunc("/regist/book/", uctr.RegistBook)
+	Controller := &controller.DBHandler{DB: db}
+	r.Methods(http.MethodGet).Path("/top/{uid}").HandlerFunc(Controller.Index)
+
+	r.Methods(http.MethodGet).Path("/books/{title}").HandlerFunc(Controller.Get)
+	// r.HandleFunc("/", uctr.Login)
+	// r.HandleFunc("/signup/", uctr.NewUser)
+	// r.HandleFunc("/top/", uctr.SelectPersonalInfo)
+	// r.HandleFunc("/top/del/", uctr.DeleteBookByID)
+	// //r.HandleFunc("/top/booksInfo/", uctr.DispBooksDetail)
+	// r.HandleFunc("/regist/book/", uctr.RegistBook)
 	//r.HandleFunc("/community/add/", uctr.SelectAllPerson)
 	//r.HandleFunc("/community/add/", uctr.Community)
 
