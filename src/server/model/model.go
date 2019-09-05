@@ -17,24 +17,24 @@ package model
 // }
 
 type User struct {
-	Id       int    `db:"id" json:"id"`
+	Id       int64  `db:"id" json:"id"`
 	Uid      string `db:"firebase_uid" json:"uid"`
 	Name     string `db:"name" json:"name"`
 	PhotoUrl string `db:"photo_url" json:"photo_url"`
 }
 
 type UserResp struct {
-	Id    int    `json:"id"`
+	Id    int64  `json:"id"`
 	Name  string `json:"name"`
 	Books []Book `json:"books"`
 	//File     string `json:file`
 }
 
 type Book struct {
-	Id      int     `db:"id" json:"id"`
+	Id      int64   `db:"id" json:"id"`
 	Title   string  `db:"title" json:"title"`
 	Author  string  `db:"author" json:"author"`
-	Price   int     `db:"price" json:"price"`
+	Price   int64   `db:"price" json:"price"`
 	ImgUrl  string  `db:"img_url" json:"img_url"`
 	PageUrl *string `db:"page_url" json:"page_url"`
 }
@@ -44,7 +44,7 @@ type Item struct {
 	Author    string `json:"author"`
 	Isbn      string `json:"isbn"`
 	SalesDate string `json:"salesDate"`
-	ItemPrice int    `json:"itemPrice"`
+	ItemPrice int64  `json:"itemPrice"`
 	ItemUrl   string `json:"itemUrl"`
 	ImageUrl  string `json:"mediumImageUrl"`
 }
@@ -59,6 +59,15 @@ type Resp struct {
 
 type Books struct {
 	Books []Items `json:books`
+}
+
+type PostBookRequest struct {
+	Title   string `json:"title"`
+	Author  string `json:"author"`
+	Price   int64  `json:"price"`
+	ImgUrl  string `json:"img_url"`
+	PageUrl string `json:"page_url"`
+	UserId  int64  `json:"user_id"`
 }
 
 // func (u *User) Insert(db *sql.DB) (*User, error) {

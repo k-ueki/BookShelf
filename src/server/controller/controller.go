@@ -6,12 +6,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"github.com/k-ueki/app2/src/server/model"
+	"github.com/k-ueki/app2/src/server/repository"
 	"github.com/k-ueki/app2/src/server/service"
 )
 
@@ -35,31 +38,31 @@ type Res struct {
 }
 
 //http.Requestからbodyをmapで返す
-// func body(r *http.Request) map[string]string {
-// 	fmt.Println(r.ContentLength)
-// 	len := r.ContentLength
-// 	body := make([]byte, len)
-// 	r.Body.Read(body)
-// 	tmp := string(body)
-// 	return sep(tmp, "&")
-// }
-// func sep(str string, cha string) map[string]string {
-// 	tmp := strings.Split(str, cha)
-//
-// 	var el = make([]string, len(tmp)) //name,password,emailの3
-// 	var th = make([]string, len(tmp))
-// 	for i, v := range tmp {
-// 		tmptmp := strings.Split(v, "=")
-// 		th[i] = tmptmp[0]
-// 		el[i] = tmptmp[1]
-// 	}
-// 	var res = make(map[string]string, len(tmp))
-// 	for i := 0; i < len(tmp); i++ {
-// 		tmp, _ := url.QueryUnescape(el[i])
-// 		res[th[i]] = tmp
-// 	}
-// 	return res
-// }
+func body(r *http.Request) map[string]string {
+	fmt.Println(r.ContentLength)
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	tmp := string(body)
+	return sep(tmp, "&")
+}
+func sep(str string, cha string) map[string]string {
+	tmp := strings.Split(str, cha)
+
+	var el = make([]string, len(tmp)) //name,password,emailの3
+	var th = make([]string, len(tmp))
+	for i, v := range tmp {
+		tmptmp := strings.Split(v, "=")
+		th[i] = tmptmp[0]
+		el[i] = tmptmp[1]
+	}
+	var res = make(map[string]string, len(tmp))
+	for i := 0; i < len(tmp); i++ {
+		tmp, _ := url.QueryUnescape(el[i])
+		res[th[i]] = tmp
+	}
+	return res
+}
 
 //User新規登録
 // func (u *DBHandler) NewUser(w http.ResponseWriter, r *http.Request) {
@@ -123,8 +126,6 @@ type Res struct {
 func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	uid := vars["uid"]
-
-	fmt.Println(os.Getenv("TEST"))
 
 	userService := service.NewUserService(u.DB)
 
@@ -190,7 +191,7 @@ func Env_load() {
 }
 
 //本の新規登録。楽天Books API を内部で叩く
-func (u *DBHandler) Get(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) GetBooks(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	title := vars["title"]
 
@@ -218,7 +219,40 @@ func (u *DBHandler) Get(w http.ResponseWriter, r *http.Request) {
 	books.Books = items.Items
 	// fmt.Fprintf(w, string(bytes))
 	//いい感じに返してほしい
-	fmt.Println(books)
+	fmt.Printf("%#v\n", books)
+}
+
+func (u *DBHandler) PostBooks(w http.ResponseWriter, r *http.Request) {
+	reqParam := &model.PostBookRequest{}
+	if err := json.NewDecoder(r.Body).Decode(&reqParam); err != nil {
+		fmt.Println(err)
+	}
+
+	var book = &model.Book{
+		Title:   reqParam.Title,
+		Author:  reqParam.Author,
+		Price:   reqParam.Price,
+		ImgUrl:  reqParam.ImgUrl,
+		PageUrl: &reqParam.PageUrl,
+		// User_id:        user_id,
+	}
+	result, err := repository.Insert(u.DB, *book)
+	if err != nil {
+		fmt.Println(err)
+		// return err
+	}
+
+	bid, err := result.LastInsertId()
+	if err != nil {
+		fmt.Println(err)
+		// return err
+	}
+	_, err = repository.RegisterBookAndUser(u.DB, reqParam.UserId, bid)
+	if err != nil {
+		fmt.Println(err)
+		// return err
+	}
+
 }
 
 // func (u *DBHandler) RegistBook(w http.ResponseWriter, r *http.Request) {
