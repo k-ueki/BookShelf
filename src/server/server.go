@@ -34,11 +34,14 @@ func main() {
 
 	r.Methods(http.MethodGet).Path("/books/{title}").HandlerFunc(Controller.GetBooks)
 	r.Methods(http.MethodPost).Path("/books/").HandlerFunc(Controller.PostBooks)
+
+	r.Methods(http.MethodGet).Path("/community/{uid}").HandlerFunc(Controller.GetCommunities)
+	// r.Methods(http.MethodPost).Path("/community/").HandlerFunc(Controller.)
 	// r.HandleFunc("/signup/", uctr.NewUser)
 	// r.HandleFunc("/top/", uctr.SelectPersonalInfo)
 	// r.HandleFunc("/top/del/", uctr.DeleteBookByID)
 	// //r.HandleFunc("/top/booksInfo/", uctr.DispBooksDetail)
-	//r.HandleFunc("/community/add/", uctr.SelectAllPerson)
+	// r.HandleFunc("/community/add/", uctr.SelectAllPerson)
 	//r.HandleFunc("/community/add/", uctr.Community)
 
 	// r.HandleFunc("/", uctr.Login)

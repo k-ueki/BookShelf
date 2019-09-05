@@ -37,6 +37,4 @@ func (u *User) Index(uid string) (model.UserResp, error) {
 	return res, nil
 }
 
-func main() {
-
-}
+func main() {}

@@ -6,9 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
-	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
@@ -35,33 +33,6 @@ type Res struct {
 	UserId string       `json:userid`
 	Email  string       `json:email`
 	Books  []model.Book `json:books`
-}
-
-//http.Requestからbodyをmapで返す
-func body(r *http.Request) map[string]string {
-	fmt.Println(r.ContentLength)
-	len := r.ContentLength
-	body := make([]byte, len)
-	r.Body.Read(body)
-	tmp := string(body)
-	return sep(tmp, "&")
-}
-func sep(str string, cha string) map[string]string {
-	tmp := strings.Split(str, cha)
-
-	var el = make([]string, len(tmp)) //name,password,emailの3
-	var th = make([]string, len(tmp))
-	for i, v := range tmp {
-		tmptmp := strings.Split(v, "=")
-		th[i] = tmptmp[0]
-		el[i] = tmptmp[1]
-	}
-	var res = make(map[string]string, len(tmp))
-	for i := 0; i < len(tmp); i++ {
-		tmp, _ := url.QueryUnescape(el[i])
-		res[th[i]] = tmp
-	}
-	return res
 }
 
 //User新規登録
@@ -128,7 +99,6 @@ func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) {
 	uid := vars["uid"]
 
 	userService := service.NewUserService(u.DB)
-
 	resp, err := userService.Index(uid)
 	if err != nil {
 		fmt.Println("errorだ!")
@@ -255,24 +225,19 @@ func (u *DBHandler) PostBooks(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// func (u *DBHandler) RegistBook(w http.ResponseWriter, r *http.Request) {
-// 	body := body(r)
-//
-// 	price, _ := strconv.Atoi(body["price"])
-// 	user_id, _ := strconv.Atoi(body["user_id"])
-// 	var book = model.Book{
-// 		Title:          body["title"],
-// 		Author:         body["author"],
-// 		Price:          price,
-// 		ImgUrl:         body["img_url"],
-// 		RakutenPageUrl: body["rakuten_page_url"],
-// 		User_id:        user_id,
-// 	}
-// 	_, err := book.InsertBook(u.DB)
-// 	if err != nil {
-// 		return
-// 	}
-// }
+func (u *DBHandler) GetCommunities(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+
+	communityService := service.NewCommunityService(u.DB)
+	resp, err := communityService.GetCommunitiesByUid(uid)
+	if err != nil {
+		fmt.Println("errorだ!")
+	}
+	//この辺いい感じにしてほしい
+	fmt.Println(resp)
+}
+
 // func (u *DBHandler) SelectAllPerson(h http.ResponseWriter, r *http.Request) {
 // 	var allperson = model.User{}
 //

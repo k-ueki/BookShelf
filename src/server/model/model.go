@@ -70,6 +70,11 @@ type PostBookRequest struct {
 	UserId  int64  `json:"user_id"`
 }
 
+type Community struct {
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
 // func (u *User) Insert(db *sql.DB) (*User, error) {
 // 	_, err := db.Exec("insert into users (username,user_id,email,password) values (?,?,?,?)", u.Name, u.UserId, u.Email, u.Password)
 // 	if err != nil {
