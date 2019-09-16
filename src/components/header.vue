@@ -1,92 +1,53 @@
 <template>
-        <header>
-                <div class="head-container">
-                    <div class="logo">〇</div>
-                    <div class="header-list">
-                        <ul>
-                            <li style="cursor:pointer;">My Bookshelf</li>
-							<li>B</li>
-                            <li>C</li>
-                            <li>D</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="search-form">
-                    <input type="search" name="search" class="search" placeholder="検索ワード">
-                    <button type="submit" class="search-btn">検索</button>
-					<button class="logout-btn">ログアウト</button>
-                </div>
-                <div class="icon">
-					<!--
-                    <img class="parsonal-icon" src="../../images/top.png">
-					-->
-                </div>
-            
-        </header>
+    <v-app-bar app dark style="width:100%;">
+      <v-toolbar-title class="headline text-uppercase">
+        <span>MyBookShelf</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+	  <v-form>
+		  <v-text-field
+			label="search word"
+			></v-text-field>
+	  </v-form>
+		  <v-btn
+			  text
+			  target="_blank"
+			  ><span>検索</span>
+		  </v-btn>
+      <v-btn
+        text
+        target="_blank"
+      >
+        <span class="mr-2">Logout</span>
+      </v-btn>
+	</v-app-bar>
+        <!-- <header> -->
+        <!--         <div class="head&#45;container"> -->
+        <!--             <div class="logo">〇</div> -->
+        <!--             <div class="header&#45;list"> -->
+        <!--                 <ul> -->
+        <!--                     <li style="cursor:pointer;">My Bookshelf</li> -->
+		<!-- 					<li>B</li> -->
+        <!--                     <li>C</li> -->
+        <!--                     <li>D</li> -->
+        <!--                 </ul> -->
+        <!--             </div> -->
+        <!--         </div> -->
+        <!--         <div class="search&#45;form"> -->
+        <!--             <input type="search" name="search" class="search" placeholder="検索ワード"> -->
+        <!--             <button type="submit" class="search&#45;btn">検索</button> -->
+		<!-- 			<button class="logout&#45;btn">ログアウト</button> -->
+        <!--         </div> -->
+        <!--         <div class="icon"> -->
+		<!-- 			<!&#45;&#45; -->
+        <!--             <img class="parsonal&#45;icon" src="../../images/top.png"> -->
+		<!-- 			&#45;&#45;> -->
+        <!--         </div> -->
+        <!--      -->
+        <!-- </header> -->
 </template>
 <script>
 export default{
 }
 </script>
 <style>
-header{
-    position:fixed;
-    top:0%;
-    left:0%;
-    width:80%;
-    height:55px;
-    background-color:rgba(253, 188, 46,0.7);
-    padding:0 12.5%;
-}
-li{
-    list-style:none;
-    float:left;
-    padding-left:30px;
-}
-
-
-.head-container{
-    text-align:center;
-    
-}
-.logo{
-    font-family:"Monotype Corsiva";
-    font-size:35px;
-    float:left;
-}
-.header-list{
-    float:left;
-    height:55px;
-}
-
-.search-form{
-    height:55px;
-    float:right;
-    line-height:30px;
-}
-.search{
-    background-color:rgba(255,255,255,0.2);
-    border-color:rgba(0,0,0,0.5);
-}
-.search-btn{
-    background-color:rgba(255,255,255,0);
-    color:rgb(0,0,0);
-    border-color:rgba(0,0,0,0.3);
-}
-.logout-btn{
-	background-color:rgba(255,255,255,0);
-	color:rgb(0,0,0);
-	border-color:rgba(0,0,0,0.3);
-	margin-left:25px;
-}
-
-.icon{
-    float:right;
-    height:55px;
-}
-.parsonal-icon{
-    width:20px;
-    height:20px;
-    border-radius:10px;
-}
-</style>
