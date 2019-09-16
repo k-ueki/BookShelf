@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/k-ueki/app2/src/server/model"
 	"github.com/k-ueki/app2/src/server/repository"
@@ -14,17 +16,18 @@ func NewUserService(db *sqlx.DB) *User {
 	return &User{db}
 }
 
-func (u *User) Index(uid string) (model.UserResp, error) {
+// func (u *User) Index(uid string) (model.UserResp, error) {
+func (u *User) Index(uid string) (int, interface{}, error) {
 	res := model.UserResp{}
 
 	usr, err := repository.SelectUserByUid(u.DB, uid)
 	if err != nil {
-		return res, err
+		return http.StatusBadRequest, nil, err
 	}
 
 	books, err := repository.SelectBookByUserId(u.DB, usr.Id)
 	if err != nil {
-		return res, err
+		return http.StatusBadRequest, nil, err
 	}
 
 	res.Id = usr.Id
@@ -34,7 +37,7 @@ func (u *User) Index(uid string) (model.UserResp, error) {
 	// marUsr, _ := json.Marshal(res)
 
 	// fmt.Fprintf(w, string(marUsr))
-	return res, nil
+	return http.StatusOK, res, nil
 }
 
 func main() {}

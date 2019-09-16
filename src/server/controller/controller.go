@@ -93,21 +93,20 @@ type Res struct {
 // 	}
 // 	fmt.Fprintf(w, fmt.Sprint(res.ID))
 // }
-func (u *DBHandler) Test(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("OK")
-}
 
-func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	vars := mux.Vars(r)
 	uid := vars["uid"]
 
+	fmt.Println(uid)
+
 	userService := service.NewUserService(u.DB)
-	resp, err := userService.Index(uid)
+	_, resp, err := userService.Index(uid)
 	if err != nil {
 		fmt.Println("errorだ!")
+		return http.StatusInternalServerError, nil, err
 	}
-	//この辺いい感じにしてほしい
-	fmt.Println(resp)
+	return http.StatusOK, resp, nil
 }
 
 //Personal Info をIDから取得
@@ -164,7 +163,7 @@ func Env_load() {
 }
 
 //本の新規登録。楽天Books API を内部で叩く
-func (u *DBHandler) GetBooks(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) GetBooks(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	vars := mux.Vars(r)
 	title := vars["title"]
 
@@ -177,6 +176,7 @@ func (u *DBHandler) GetBooks(w http.ResponseWriter, r *http.Request) {
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
+		return http.StatusInternalServerError, nil, err
 	}
 	defer resp.Body.Close()
 
@@ -187,18 +187,19 @@ func (u *DBHandler) GetBooks(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(bytes, &items)
 	if err != nil {
 		fmt.Println(err)
+		return http.StatusInternalServerError, nil, err
 	}
 
 	books.Books = items.Items
-	// fmt.Fprintf(w, string(bytes))
-	//いい感じに返してほしい
-	fmt.Printf("%#v\n", books)
+
+	return http.StatusOK, books, nil
 }
 
-func (u *DBHandler) PostBooks(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) PostBooks(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	reqParam := &model.PostBookRequest{}
 	if err := json.NewDecoder(r.Body).Decode(&reqParam); err != nil {
 		fmt.Println(err)
+		return http.StatusBadRequest, nil, err
 	}
 
 	var book = &model.Book{
@@ -212,23 +213,28 @@ func (u *DBHandler) PostBooks(w http.ResponseWriter, r *http.Request) {
 	result, err := repository.Insert(u.DB, *book)
 	if err != nil {
 		fmt.Println(err)
-		// return err
+		// return errInternalServerError
+		return http.StatusInternalServerError, nil, err
 	}
 
 	bid, err := result.LastInsertId()
 	if err != nil {
 		fmt.Println(err)
 		// return err
+		return http.StatusInternalServerError, nil, err
 	}
 	_, err = repository.RegisterBookAndUser(u.DB, reqParam.UserId, bid)
 	if err != nil {
 		fmt.Println(err)
 		// return err
+		return http.StatusInternalServerError, nil, err
 	}
+
+	return http.StatusCreated, nil, nil
 
 }
 
-func (u *DBHandler) GetCommunities(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) GetCommunities(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	vars := mux.Vars(r)
 	uid := vars["uid"]
 
@@ -236,15 +242,17 @@ func (u *DBHandler) GetCommunities(w http.ResponseWriter, r *http.Request) {
 	resp, err := communityService.GetCommunitiesByUid(uid)
 	if err != nil {
 		fmt.Println("errorだ!")
+		return http.StatusInternalServerError, nil, err
 	}
-	//この辺いい感じにしてほしい
-	fmt.Println(resp)
+
+	return http.StatusOK, resp, nil
 }
 
-func (u *DBHandler) PostCommunities(w http.ResponseWriter, r *http.Request) {
+func (u *DBHandler) PostCommunities(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	reqParam := &model.PostCommunityRequest{}
 	if err := json.NewDecoder(r.Body).Decode(&reqParam); err != nil {
 		fmt.Println(err)
+		return http.StatusBadRequest, nil, err
 	}
 	uids := reqParam.UserIds
 	cid := reqParam.CommunityId
@@ -253,8 +261,10 @@ func (u *DBHandler) PostCommunities(w http.ResponseWriter, r *http.Request) {
 	err := communityService.Create(uids, cid)
 	if err != nil {
 		fmt.Println("errorだ!")
+		return http.StatusInternalServerError, nil, err
 	}
-	fmt.Println(http.StatusCreated)
+
+	return http.StatusCreated, nil, nil
 }
 
 // func (u *DBHandler) SelectAllPerson(h http.ResponseWriter, r *http.Request) {

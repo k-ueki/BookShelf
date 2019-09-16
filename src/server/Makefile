@@ -2,7 +2,7 @@ PORT := 8888
 HOST := localhost
 
 run:
-	go run *.go
+	go run api/main.go
 
 req-books-post:
 	curl -v -XPOST $(HOST):$(PORT)/books -d '{"title": "hoge", "author": "hogeman", "price": 500, "img_url":"http://hogehoe.com", "rakuten_page_url":"http://rakutenhogehoge","user_id":1}'
