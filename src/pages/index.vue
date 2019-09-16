@@ -12,21 +12,23 @@
         </div>
       </div>
       <div class="right-half-page">
-        <div class="login-form">
-			<input type="email" v-model="email" name="email" class="form" placeholder="メールアドレス">
-			<input type="password" v-model="pass" name="pass" class="form" placeholder="パスワード">
-			<button class="login-form-btn" @click=login>ログイン</button>
-          <!--<a href="#">パスワードを忘れた場合はこちら</a>-->
-        </div>
+        <!-- <div class="login&#45;form"> -->
+		<!-- 	<input type="email" v&#45;model="email" name="email" class="form" placeholder="メールアドレス"> -->
+		<!-- 	<input type="password" v&#45;model="pass" name="pass" class="form" placeholder="パスワード"> -->
+		<!-- 	<button class="login&#45;form&#45;btn" @click=login>ログイン</button> -->
+        <!--   <!&#45;&#45;<a href="#">パスワードを忘れた場合はこちら</a>&#45;&#45;> -->
+        <!-- </div> -->
         <div class="catch2">
           <span　class="fa fa-book"></span>
           <h3 class="item">いろいろな本をのぞいてみよう</h3>
           <div class="login-regist-btn">
 			  <li>ウチ本を始めよう</li>
-			  <router-link to="/signup/"><button class="make-account-btn btn">アカウント作成</button></router-link>
+			  <!-- <router&#45;link to="/signup/"><button class="make&#45;account&#45;btn btn">アカウント作成</button></router&#45;link> -->
 			  <!--
 			  <router-link ><button class="login-btn btn">ログイン</button></router-link>
 			  -->
+			  <button @click="signIn" class="make-account-btn btn"><font :icon="['fab', 'google']"></font>SignIn</button>
+			  <button v-on:click="test">TEST</button>
           </div>
         </div>
       </div>
@@ -35,6 +37,17 @@
 </template>
 <script>
 import axios from 'axios'
+import firebase from 'firebase'
+import router from '../router.js'
+
+const firebaseConfig = {
+  apiKey: process.env.VUE_APP_FIREBASE_APIKEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTHDOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASEURL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECTID,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGINGSENDERID,
+  appId: process.env.VUE_APP_FIREBASE_APPID
+}
 
 export default{
 	name:"index",
@@ -46,26 +59,47 @@ export default{
 		}
 	},
 	methods:{
-		login(){
-			let params = new URLSearchParams();
-			params.append('email',this.email);
-			params.append('pass',this.pass);
-
-			axios.post("http://localhost:8888/",params)
-				.then(response => {
-					this.id = response.data
-					if(!!response.data && response.data!="ERROR"){
-						this.$router.push({path:"/top/",query: {id:response.data}})
-					}
-					if(response.data=="ERROR"){
-						alert("入力エラー")
-						this.email=""
-						this.pass=""
-					}
-				}).catch(error=>{
-					this.errorStatus = "Error: Network Error";
+		// login(){
+		// 	let params = new URLSearchParams();
+		// 	params.append('email',this.email);
+		// 	params.append('pass',this.pass);
+        //
+		// 	axios.post("http://localhost:8888/",params)
+		// 		.then(response => {
+		// 			this.id = response.data
+		// 			if(!!response.data && response.data!="ERROR"){
+		// 				this.$router.push({path:"/top/",query: {id:response.data}})
+		// 			}
+		// 			if(response.data=="ERROR"){
+		// 				alert("入力エラー")
+		// 				this.email=""
+		// 				this.pass=""
+		// 			}
+		// 		}).catch(error=>{
+		// 			this.errorStatus = "Error: Network Error";
+		// 		})
+		// },
+		signIn:function(){
+			firebase.initializeApp(firebaseConfig);
+			const googleProvider = new firebase.auth.GoogleAuthProvider()
+       		firebase.auth().signInWithPopup(googleProvider)
+				.then(user=>{
+					console.log("OK",user)
+					firebase.auth().currentUser.getIdToken(true)
+						.then(function(idToken) {
+							console.log(idToken)
+							localStorage.setItem('token',idToken)
+						});
+					router.push({path:'/top/'})
+				}).catch(err=>{
+					console.log(err)
 				})
+		},
+		test:function(){
+			var user = firebase.auth().currentUser;
+			console.log(user)
 		}
+
 	}
 }
 </script>
