@@ -93,6 +93,9 @@ type Res struct {
 // 	}
 // 	fmt.Fprintf(w, fmt.Sprint(res.ID))
 // }
+func (u *DBHandler) Test(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("OK")
+}
 
 func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -238,58 +241,25 @@ func (u *DBHandler) GetCommunities(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(resp)
 }
 
+func (u *DBHandler) PostCommunities(w http.ResponseWriter, r *http.Request) {
+	reqParam := &model.PostCommunityRequest{}
+	if err := json.NewDecoder(r.Body).Decode(&reqParam); err != nil {
+		fmt.Println(err)
+	}
+	uids := reqParam.UserIds
+	cid := reqParam.CommunityId
+
+	communityService := service.NewCommunityService(u.DB)
+	err := communityService.Create(uids, cid)
+	if err != nil {
+		fmt.Println("errorだ!")
+	}
+	fmt.Println(http.StatusCreated)
+}
+
 // func (u *DBHandler) SelectAllPerson(h http.ResponseWriter, r *http.Request) {
 // 	var allperson = model.User{}
 //
 // 	res, _ := allperson.SelectAllPerson(u.DB)
 // 	mar, _ := json.Marshal(res)
 // 	fmt.Fprintf(h, string(mar))
-// }
-//
-// //=========================
-// // Community
-// // ========================
-//
-// //func (u *DBHandler) Community(w http.ResponseWriter, r *http.Request) {
-// //	switch r.Method {
-// //	case "GET":
-// //		u.SelectAllPerson(w, r)
-// //	case "POST":
-// //		u.ResisterCommunity(w, r)
-// //	}
-// //
-// //}
-//
-// //func (u *DBHandler) ResisterCommunity(w http.ResponseWriter, r *http.Request) {
-// //	body := body(r)
-// //
-// //	tmp := len(body["CommunityMembers"])
-// //	members := strconv.Itoa(tmp)
-// //
-// //	var com = model.Community{
-// //		Name: body["CommunityName"],
-// //		//Pass:  body["Pass"],
-// //		Users: members,
-// //	}
-// //	if body["Pass"] != "" {
-// //		com.Pass = body["Pass"]
-// //	}
-// //
-// //	var usr = model.User{
-// //		Name: body["CommunityMembers"],
-// //	}
-// //	userinfo, _ := usr.SelectUserIDByName(u.DB)
-// //	fmt.Println("userID", userinfo)
-// //
-// //	switch members {
-// //	case "1":
-// //		com.User1 = body["CommunityMembers"]
-// //	}
-// //
-// //	err := com.Resister(u.DB)
-// //	if err != nil {
-// //		fmt.Println(err)
-// //	}
-// //
-// //	fmt.Fprintf(w, "OK")
-// //}

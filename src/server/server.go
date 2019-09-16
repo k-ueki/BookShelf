@@ -30,12 +30,14 @@ func main() {
 	// userInfo := make(chan *model.User)
 
 	Controller := &controller.DBHandler{DB: db}
+
 	r.Methods(http.MethodGet).Path("/top/{uid}").HandlerFunc(Controller.Index)
 
 	r.Methods(http.MethodGet).Path("/books/{title}").HandlerFunc(Controller.GetBooks)
-	r.Methods(http.MethodPost).Path("/books/").HandlerFunc(Controller.PostBooks)
+	r.Methods(http.MethodPost).Path("/books").HandlerFunc(Controller.PostBooks)
 
 	r.Methods(http.MethodGet).Path("/community/{uid}").HandlerFunc(Controller.GetCommunities)
+	r.Methods(http.MethodPost).Path("/community").HandlerFunc(Controller.PostCommunities)
 	// r.Methods(http.MethodPost).Path("/community/").HandlerFunc(Controller.)
 	// r.HandleFunc("/signup/", uctr.NewUser)
 	// r.HandleFunc("/top/", uctr.SelectPersonalInfo)
