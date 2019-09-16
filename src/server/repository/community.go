@@ -11,7 +11,7 @@ import (
 func GetAllByUid(db *sqlx.DB, uid string) (*[]model.Community, error) {
 	communities := make([]model.Community, 0)
 	if err := db.Select(&communities, `
-SELECT 
+SELECT DISTINCT 
 	communities.id,
 	communities.name
 FROM communities

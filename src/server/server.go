@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"log"
@@ -11,7 +11,20 @@ import (
 	controller "github.com/k-ueki/app2/src/server/controller"
 )
 
-func main() {
+type Server struct {
+	// db     *sqlx.DB
+	router *mux.Router
+}
+
+func NewServer() *Server {
+	return &Server{}
+}
+
+func (s *Server) Init() {
+	s.router = s.Route()
+}
+
+func (s *Server) Route() *mux.Router {
 	var DSN string = "root:@/uchihon"
 	r := mux.NewRouter()
 
@@ -31,14 +44,14 @@ func main() {
 
 	Controller := &controller.DBHandler{DB: db}
 
-	r.Methods(http.MethodGet).Path("/top/{uid}").HandlerFunc(Controller.Index)
+	r.Methods(http.MethodGet).Path("/top/{uid}").Handler(AppHandler{Controller.Index})
 
-	r.Methods(http.MethodGet).Path("/books/{title}").HandlerFunc(Controller.GetBooks)
-	r.Methods(http.MethodPost).Path("/books").HandlerFunc(Controller.PostBooks)
+	r.Methods(http.MethodGet).Path("/books/{title}").Handler(AppHandler{Controller.GetBooks})
+	r.Methods(http.MethodPost).Path("/books").Handler(AppHandler{Controller.PostBooks})
 
-	r.Methods(http.MethodGet).Path("/community/{uid}").HandlerFunc(Controller.GetCommunities)
-	r.Methods(http.MethodPost).Path("/community").HandlerFunc(Controller.PostCommunities)
-	// r.Methods(http.MethodPost).Path("/community/").HandlerFunc(Controller.)
+	r.Methods(http.MethodGet).Path("/community/{uid}").Handler(AppHandler{Controller.GetCommunities})
+	r.Methods(http.MethodPost).Path("/community").Handler(AppHandler{Controller.PostCommunities})
+
 	// r.HandleFunc("/signup/", uctr.NewUser)
 	// r.HandleFunc("/top/", uctr.SelectPersonalInfo)
 	// r.HandleFunc("/top/del/", uctr.DeleteBookByID)
@@ -51,4 +64,6 @@ func main() {
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
 	http.ListenAndServe(":8888", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(r))
+
+	return r
 }
