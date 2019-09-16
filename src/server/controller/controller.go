@@ -98,10 +98,8 @@ func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interfac
 	vars := mux.Vars(r)
 	uid := vars["uid"]
 
-	fmt.Println(uid)
-
 	userService := service.NewUserService(u.DB)
-	_, resp, err := userService.Index(uid)
+	resp, err := userService.Index(uid)
 	if err != nil {
 		fmt.Println("errorだ!")
 		return http.StatusInternalServerError, nil, err

@@ -8,8 +8,9 @@ type User struct {
 }
 
 type UserResp struct {
-	Id    int64  `json:"id"`
-	Name  string `json:"name"`
-	Books []Book `json:"books"`
+	Id          int64       `json:"id"`
+	Name        string      `json:"name"`
+	Books       []Book      `json:"books"`
+	Communities []Community `json:"communities"`
 	//File     string `json:file`
 }
