@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 
+	"github.com/gocraft/dbr"
 	"github.com/jmoiron/sqlx"
 	"github.com/k-ueki/app2/src/server/model"
 	"github.com/k-ueki/app2/src/server/repository"
@@ -14,6 +15,29 @@ type Community struct {
 
 func NewCommunityService(db *sqlx.DB) *Community {
 	return &Community{db}
+}
+
+func (c *Community) Create(uids []int64, cid int64) error {
+	coms := make([]model.CommunityParams, 0)
+
+	for _, v := range uids {
+		tmp := model.CommunityParams{
+			Uid: v,
+			Cid: cid,
+		}
+		coms = append(coms, tmp)
+	}
+
+	conn, _ := dbr.Open("mysql", "root:@/uchihon", nil)
+	sess := conn.NewSession(nil)
+
+	_, err := repository.CreateCommunity(c.DB, sess, coms)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
 }
 
 func (c *Community) GetCommunitiesByUid(uid string) ([]model.Community, error) {

@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"database/sql"
+
+	"github.com/gocraft/dbr"
 	"github.com/jmoiron/sqlx"
 	"github.com/k-ueki/app2/src/server/model"
 )
@@ -21,4 +24,12 @@ WHERE users.firebase_uid=?
 		return nil, err
 	}
 	return &communities, nil
+}
+
+func CreateCommunity(db *sqlx.DB, sess *dbr.Session, coms []model.CommunityParams) (sql.Result, error) {
+	stmt := sess.InsertInto("user_community").Columns("user_id", "community_id")
+	for _, v := range coms {
+		stmt.Record(v)
+	}
+	return stmt.Exec()
 }
