@@ -1,11 +1,9 @@
 
 -- +goose Up
 INSERT INTO communities(
-	name,
-	pass
+	name
 ) VALUES (
-	"hoge_community",
-	"hogehoge"
+	"hoge"
 );
 
 -- +goose Down
