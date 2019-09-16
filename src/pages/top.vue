@@ -147,32 +147,44 @@ export default{
 	created(){
 		firebase.initializeApp(firebaseConfig);
 		firebase.auth().onAuthStateChanged((user) => {
-		  if (!user) {
-		    // サインインしていない状態
-		    // サインイン画面に遷移する等
-		    // 例:
-			  // router.push('/')
-			  console.log('ok')
-		  } else {
+		  if (user) {
 		    // サインイン済み
-			  console.log(user.uid)
 			  console.log("LOGINOK")
 
 			  let uid
 			  uid = user.uid
 
-			  uid="hoge"
+			  axios.get("http://localhost:8888/user/" + uid)
+				  .then(res=>{
+					  if(res.data){
+						axios.get("http://localhost:8888/top/" + uid)
+							.then(res => {
+								console.log("res",res.data)
+								this.name = res.data.name;
+								this.booksinfo = res.data.books;
+								this.communities = res.data.communities;
+							}).catch(err => {
+								this.errorStatus = "Error: Network Error";
+							})
+					  }else{
+						  let params = new URLSearchParams();
+						  params.append('uid',uid);
+						  params.append('name',user.displayName);
 
-			axios.get("http://localhost:8888/top/" + uid)
-				.then(res => {
-					console.log("res",res.data)
-					this.name = res.data.name;
-					// this.userid = '@'+res.data.UserId
-					this.booksinfo = res.data.books;
-					this.communities = res.data.communities;
-				}).catch(err => {
-					this.errorStatus = "Error: Network Error";
-				})
+						  axios.post("http://localhost:8888/user",params)
+							  .then(res=>{
+								this.name = user.displayName
+							  }).catch(err=>{
+								this.errorStatus = "Error: Network Error"
+							  })
+					  }
+				  })
+		  } else {
+		    // サインインしていない状態
+		    // サインイン画面に遷移する等
+		    // 例:
+			  // router.push('/')
+			  console.log('ok')
 		  }
 		});
 

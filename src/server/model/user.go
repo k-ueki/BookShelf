@@ -14,3 +14,8 @@ type UserResp struct {
 	Communities []Community `json:"communities"`
 	//File     string `json:file`
 }
+
+type UserReq struct {
+	Uid  string `db:"firebase_uid" json:"uid"`
+	Name string `db:"name" json:"name"`
+}

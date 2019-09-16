@@ -27,7 +27,6 @@ func (s *Server) Init() {
 func (s *Server) Route() *mux.Router {
 	var DSN string = "root:@/uchihon"
 	r := mux.NewRouter()
-
 	db, err := sqlx.Open("mysql", DSN)
 	if err != nil {
 		log.Fatal(err)
@@ -43,6 +42,9 @@ func (s *Server) Route() *mux.Router {
 	// userInfo := make(chan *model.User)
 
 	Controller := &controller.DBHandler{DB: db}
+
+	r.Methods(http.MethodGet).Path("/user/{uid}").Handler(AppHandler{Controller.DiscriminateExists})
+	r.Methods(http.MethodPost).Path("/user").Handler(AppHandler{Controller.RegisterUser})
 
 	r.Methods(http.MethodGet).Path("/top/{uid}").Handler(AppHandler{Controller.Index})
 

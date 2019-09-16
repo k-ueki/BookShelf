@@ -21,11 +21,6 @@ type DBHandler struct {
 	// Stream chan *model.User
 }
 
-type Community struct {
-	Community_ID   int
-	Community_Name string
-}
-
 //return用
 type Res struct {
 	ID     int          `json:id`
@@ -34,65 +29,6 @@ type Res struct {
 	Email  string       `json:email`
 	Books  []model.Book `json:books`
 }
-
-//User新規登録
-// func (u *DBHandler) NewUser(w http.ResponseWriter, r *http.Request) {
-// 	body := body(r)
-// 	var usr = model.User{
-// 		Name:     body["name"],
-// 		UserId:   body["userid"],
-// 		Password: body["password"],
-// 		Email:    body["email"],
-// 	}
-// 	flag, err, clu := usr.CheckPreDB(u.DB)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-// 	if flag == false {
-// 		switch clu {
-// 		case "email":
-// 			fmt.Fprintf(w, "このメールアドレスはすでに登録されています")
-// 			return
-// 		case "userid":
-// 			fmt.Fprintf(w, "このユーザーIDはすでに使用されています")
-// 			return
-// 		case "useridemail":
-// 			fmt.Fprintf(w, "このメールアドレスとユーザーIDはすでに使用されています")
-// 			return
-// 		}
-// 	}
-//
-// 	_, err = usr.Insert(u.DB)
-// 	if err != nil {
-// 		fmt.Println("FAILED!!!", err)
-// 		return
-// 	}
-//
-// 	res, err := usr.SelectIdByNameANDPass(u.DB)
-// 	if err != nil {
-// 		fmt.Println("ERROR!", err)
-// 		return
-// 	}
-// 	mar, _ := json.Marshal(res)
-// 	fmt.Fprintf(w, string(mar))
-// }
-
-//ログイン
-// func (u *DBHandler) Login(w http.ResponseWriter, r *http.Request) {
-// 	body := body(r)
-// 	var usr = model.User{
-// 		Password: body["pass"],
-// 		Email:    body["email"],
-// 	}
-// 	res, err := usr.GetInfoByEmailPass(u.DB)
-// 	if err != nil {
-// 		fmt.Println("ERROR!", err)
-// 		fmt.Fprintf(w, "ERROR")
-// 		return
-// 	}
-// 	fmt.Fprintf(w, fmt.Sprint(res.ID))
-// }
 
 func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	vars := mux.Vars(r)
@@ -105,6 +41,29 @@ func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interfac
 		return http.StatusInternalServerError, nil, err
 	}
 	return http.StatusOK, resp, nil
+}
+
+func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+
+	userService := service.NewUserService(u.DB)
+	isExists := userService.IsExists(uid)
+
+	return http.StatusOK, isExists, nil
+}
+
+func (u *DBHandler) RegisterUser(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	req := model.UserReq{
+		Uid:  r.FormValue("uid"),
+		Name: r.FormValue("name"),
+	}
+	_, err := repository.Register(u.DB, req)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	return http.StatusCreated, nil, nil
 }
 
 //Personal Info をIDから取得
@@ -264,10 +223,3 @@ func (u *DBHandler) PostCommunities(w http.ResponseWriter, r *http.Request) (int
 
 	return http.StatusCreated, nil, nil
 }
-
-// func (u *DBHandler) SelectAllPerson(h http.ResponseWriter, r *http.Request) {
-// 	var allperson = model.User{}
-//
-// 	res, _ := allperson.SelectAllPerson(u.DB)
-// 	mar, _ := json.Marshal(res)
-// 	fmt.Fprintf(h, string(mar))
