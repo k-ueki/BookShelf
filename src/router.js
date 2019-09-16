@@ -22,7 +22,7 @@ const router = new VueRouter({
 			component: Signup
 		},
 		{
-			path: '/top/',
+			path: '/top/:uid',
 			component: Top
 		},
 		{

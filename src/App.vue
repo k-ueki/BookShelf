@@ -1,42 +1,21 @@
 <template>
-  <div id="main">
-  <router-view></router-view>
-  </div>
+  <v-app>
+	<router-view></router-view>
+  </v-app>
 </template>
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import Header from './components/header.vue'
-import Modal from './components/modal.vue'
-
-import axios from "axios"
-import Router from 'vue-router'
-
+import HelloWorld from '@/components/HelloWorld';
+import Header from '@/components/header';
 
 export default {
-  name: 'main',
-	data(){
-		return {
-			msg:"t"
-		}
-	},
-	methods:{
-	},
-  	components: {
-    	HelloWorld,
-	  	Header,
-	  	Modal
-  	}
-}
-
+  name: 'App',
+  components: {
+	  HelloWorld,
+	Header,
+  },
+  data: () => ({
+    //
+  }),
+};
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
