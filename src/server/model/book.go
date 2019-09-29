@@ -16,7 +16,7 @@ type Item struct {
 	SalesDate string `json:"salesDate"`
 	ItemPrice int64  `json:"itemPrice"`
 	ItemUrl   string `json:"itemUrl"`
-	ImageUrl  string `json:"mediumImageUrl"`
+	ImageUrl  string `json:"largeImageUrl"`
 }
 
 type Items struct {

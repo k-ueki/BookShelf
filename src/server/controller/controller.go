@@ -43,6 +43,11 @@ func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interfac
 	return http.StatusOK, resp, nil
 }
 
+func (u *DBHandler) Test(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	fmt.Println("OK")
+	return http.StatusInternalServerError, nil, nil
+}
+
 func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	vars := mux.Vars(r)
 	uid := vars["uid"]

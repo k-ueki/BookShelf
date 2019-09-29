@@ -43,6 +43,8 @@ func (s *Server) Route() *mux.Router {
 
 	Controller := &controller.DBHandler{DB: db}
 
+	r.Methods(http.MethodGet).Path("/hc").Handler(AppHandler{Controller.Test})
+
 	r.Methods(http.MethodGet).Path("/user/{uid}").Handler(AppHandler{Controller.DiscriminateExists})
 	r.Methods(http.MethodPost).Path("/user").Handler(AppHandler{Controller.RegisterUser})
 
