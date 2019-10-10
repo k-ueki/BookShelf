@@ -144,7 +144,7 @@ export default{
 			communities:'',
 		}
 	},
-	created(){
+	created:function(){
 		firebase.initializeApp(firebaseConfig);
 		firebase.auth().onAuthStateChanged((user) => {
 		  if (user) {
@@ -179,12 +179,13 @@ export default{
 							  })
 					  }
 				  })
+
 		  } else {
 		    // サインインしていない状態
 		    // サインイン画面に遷移する等
 		    // 例:
 			  // router.push('/')
-			  console.log('ok')
+			  console.log('not login')
 		  }
 		});
 

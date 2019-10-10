@@ -1,10 +1,9 @@
 <template>
-  <div class="main-wrapper">
+  <div class="main-wrapper" style="background-color:rgba(0,0,0,0.7);">
 	  {{id}}
     <div class="main-container">
-      <div class="left-half-page">
-        <div class="catch">
-          <ul>
+      <div class="left-half-page"> <div class="catch">
+		<ul>
             <li><span class="fa fa-check-circle"></span>自分の本棚をカスタマイズしよう</li>
             <li><span class="fa fa-check-circle"></span>友達が読んでいる本をのぞいてみよう</li>
             <li><span class="fa fa-check-circle"></span>本棚をシェアしよう</li>
@@ -18,8 +17,8 @@
 		<!-- 	<button class="login&#45;form&#45;btn" @click=login>ログイン</button> -->
         <!--   <!&#45;&#45;<a href="#">パスワードを忘れた場合はこちら</a>&#45;&#45;> -->
         <!-- </div> -->
-        <div class="catch2">
-          <span　class="fa fa-book"></span>
+		<div class="catch2">
+          <span class="fa fa-book"></span>
           <h3 class="item">いろいろな本をのぞいてみよう</h3>
           <div class="login-regist-btn">
 			  <li>ウチ本を始めよう</li>
@@ -28,7 +27,6 @@
 			  <router-link ><button class="login-btn btn">ログイン</button></router-link>
 			  -->
 			  <button @click="signIn" class="make-account-btn btn"><font :icon="['fab', 'google']"></font>SignIn</button>
-			  <button v-on:click="test">TEST</button>
           </div>
         </div>
       </div>
@@ -109,18 +107,30 @@ export default{
     top:0px;
     left:0px;
 	
-    background-image:url("../../images/UNADJUSTEDNONRAW_thumb_411.jpg");
+    #background-image:url("../../images/UNADJUSTEDNONRAW_thumb_411.jpg");
+    #background-image:url("../../images/library-1147815_1920.jpg");
+    #background-image:url("../../images/books-1141910_1920.jpg");
+    background-image:url("../../images/books-2596809_1920.jpg");
     background-size:cover;
 
  
 	/*
     background-color:rgb(129, 194, 8);
-    background-color:rgba(0, 0, 0, 0.3);
-	*/ 
+    background-color:rgba(0, 0, 0, 0.7);
+	*/
     color:#ffff;
     
     width:100%;
     height:100%;
+}
+.main-wrapper::before{
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: ' ';
 }
 .book-icon{
     font-size:20px;

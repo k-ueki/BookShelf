@@ -1,20 +1,21 @@
 <template>
-<div id="modal">
-	<!--
-		<div class="overlay" @click="$emit('close')">
-	-->
+<v-app id="modal">
 		<div>
-
-			<router-link to="/top/?id=14"><div class="del">X</div></router-link>
+			<router-link to="/top"><div class="del">X</div></router-link>
 
 			<div class="modal-main-content">
-				<h3>Resisration A Book</h3>
+				<h3>Resister A Book</h3>
 				<div class="input-wrapper">
-					<div class="them">Book's Title : </div>
-					<input class="booktitle" v-model="bookT"/>
+					<v-form>
+					<span>Book's Title : </span>
+					<v-text-field 
+						v-model="bookTitle"
+						label="search word"></v-text-field>
+					</v-form>
 				</div>
 				<div class="btn-wrapper">
-					<button class="regisBtn" @click=searchBook>検索</button>
+					<v-btn class="regisBtn" @click=searchBook
+						target="_blank">検索</v-btn>
 				</div>
 			</div>
 		</div>
@@ -34,13 +35,12 @@
 				</li>
 			</ul>
 		</div>
-</div>
+</v-app>
 </template>
 <script>
 import axios from 'axios'
 
 export default{
-//	el:"#modal",
 	data(){
 		return{
 			test:'',
@@ -48,11 +48,6 @@ export default{
 			loading_act:false,
 			loading:true,
 		}
-	},
-	created(){
-//		var query = Object.assign({}, this.$route.query)
-//		console.log("LLLLLLLLLLLLLL",query)
-//		console.log("JKJKJKJKJKJ",query.id)
 	},
 	methods:{
 		clickItem(item){
@@ -79,15 +74,11 @@ export default{
 		},
 		searchBook(){
 			this.loading_act=true
-			var params = new URLSearchParams();
-			params.append("booksTitle",this.bookT);
 
-			axios.post("http://localhost:8888/top/bookapi/",params)
+			axios.get("http://localhost:8888/books/" + this.bookTitle)
 				.then(res => {
-					console.log(res.data.Items)
-					this.items = res.data.Items
-					console.log(res.data.Items["0"].Item.largeImageUrl) 
-
+					console.log(res.data.Books)
+					this.items = res.data.Books
 					this.loading = false
 				})
 				.catch(err => {

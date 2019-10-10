@@ -18,7 +18,7 @@
         text
         target="_blank"
       >
-        <span class="mr-2">Logout</span>
+	  <span class="mr-2" @click="logout">Logout</span>
       </v-btn>
 	</v-app-bar>
         <!-- <header> -->
@@ -48,6 +48,15 @@
 </template>
 <script>
 export default{
+	methods:{
+		logout(){
+			console.log("logout ok")
+			console.log("logout()")
+			// firebase.auth().signout().then(()=>
+			//  console.log("success for logout!")
+			//  )
+		}
+	}
 }
 </script>
 <style>

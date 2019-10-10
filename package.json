@@ -20,6 +20,7 @@
     "npm": "^6.9.0",
     "vue": "^2.6.10",
     "vue-cli": "^2.9.6",
+    "vue-cookie": "^1.1.4",
     "vue-material": "^1.0.0-beta-11",
     "vue-router": "^3.0.6",
     "vuetify": "^2.0.17",
