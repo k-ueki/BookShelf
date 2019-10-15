@@ -117,8 +117,8 @@ func (u *DBHandler) RegisterUser(w http.ResponseWriter, r *http.Request) (int, i
 // }
 //
 
-func Env_load() {
-	err := godotenv.Load()
+func Env_load(path string) {
+	err := godotenv.Load(path)
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -129,7 +129,7 @@ func (u *DBHandler) GetBooks(w http.ResponseWriter, r *http.Request) (int, inter
 	vars := mux.Vars(r)
 	title := vars["title"]
 
-	Env_load()
+	Env_load(os.ExpandEnv("$GOPATH/src/github.com/k-ueki/app2/.env"))
 	applicationId := os.Getenv("APPLICATION_ID")
 	url := "https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?"
 	url += "applicationId=" + applicationId

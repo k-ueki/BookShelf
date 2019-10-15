@@ -32,6 +32,7 @@
 						<tr><li>{{ item.Item.author }}</li></tr>
 						<tr><li>{{ item.Item.itemPrice }}円</li></tr>
 					</div>
+					<br/>
 				</li>
 			</ul>
 		</div>
@@ -63,10 +64,10 @@ export default{
 
 				axios.post("http://localhost:8888/regist/book/",params)
 					.then(res => {
-
+						alert("登録が完了しました。")
 					})
 					.catch(err => {
-
+						alert("登録に失敗しました。")
 					})
 			}else{
 				alert("登録をキャンセルしました。")
