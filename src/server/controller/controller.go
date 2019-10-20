@@ -2,6 +2,7 @@ package controller_user
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -233,9 +234,18 @@ func (u *DBHandler) RegisterBook(w http.ResponseWriter, r *http.Request) (int, i
 		Price:   reqParam.Price,
 		ImgUrl:  reqParam.ImgUrl,
 		PageUrl: &reqParam.PageUrl,
+		Isbn:    reqParam.Isbn,
 		// User_id:        user_id,
+		// Isbn: "123456789",
 	}
-	fmt.Println(book)
+
+	bookService := service.NewBookService(u.DB)
+	if err := bookService.IsExists(book.Isbn); err != true {
+		_, err := repository.Insert(u.DB, *book)
+		if err != nil {
+			return http.StatusInternalServerError, nil, errors.New("failed to register the book")
+		}
+	}
 
 	return http.StatusOK, nil, nil
 }

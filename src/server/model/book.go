@@ -7,6 +7,7 @@ type Book struct {
 	Price   int64   `db:"price" json:"price"`
 	ImgUrl  string  `db:"img_url" json:"img_url"`
 	PageUrl *string `db:"page_url" json:"page_url"`
+	Isbn    string  `db:"isbn" json:"isbn"`
 }
 
 type Item struct {
@@ -36,6 +37,7 @@ type PostBookRequest struct {
 	Author  string `json:"author"`
 	Price   int64  `json:"price"`
 	ImgUrl  string `json:"img_url"`
-	PageUrl string `json:"page_url"`
+	PageUrl string `json:"rakuten_page_url"`
 	UserId  int64  `json:"user_id"`
+	Isbn    string `json:"isbn"`
 }
