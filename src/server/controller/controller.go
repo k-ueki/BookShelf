@@ -160,7 +160,6 @@ func (u *DBHandler) GetBooks(w http.ResponseWriter, r *http.Request) (int, inter
 func (u *DBHandler) PostBooks(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	reqParam := &model.PostBookRequest{}
 	if err := json.NewDecoder(r.Body).Decode(&reqParam); err != nil {
-		fmt.Println(err)
 		return http.StatusBadRequest, nil, err
 	}
 
@@ -174,26 +173,19 @@ func (u *DBHandler) PostBooks(w http.ResponseWriter, r *http.Request) (int, inte
 	}
 	result, err := repository.Insert(u.DB, *book)
 	if err != nil {
-		fmt.Println(err)
-		// return errInternalServerError
 		return http.StatusInternalServerError, nil, err
 	}
 
 	bid, err := result.LastInsertId()
 	if err != nil {
-		fmt.Println(err)
-		// return err
 		return http.StatusInternalServerError, nil, err
 	}
 	_, err = repository.RegisterBookAndUser(u.DB, reqParam.UserId, bid)
 	if err != nil {
-		fmt.Println(err)
-		// return err
 		return http.StatusInternalServerError, nil, err
 	}
 
 	return http.StatusCreated, nil, nil
-
 }
 
 func (u *DBHandler) GetCommunities(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
@@ -227,4 +219,23 @@ func (u *DBHandler) PostCommunities(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	return http.StatusCreated, nil, nil
+}
+
+func (u *DBHandler) RegisterBook(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	reqParam := &model.PostBookRequest{}
+	if err := json.NewDecoder(r.Body).Decode(&reqParam); err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	var book = &model.Book{
+		Title:   reqParam.Title,
+		Author:  reqParam.Author,
+		Price:   reqParam.Price,
+		ImgUrl:  reqParam.ImgUrl,
+		PageUrl: &reqParam.PageUrl,
+		// User_id:        user_id,
+	}
+	fmt.Println(book)
+
+	return http.StatusOK, nil, nil
 }
