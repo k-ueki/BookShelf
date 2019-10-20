@@ -53,16 +53,23 @@ export default{
 	methods:{
 		clickItem(item){
 			if(confirm("登録しますか？")){
-				var params = new URLSearchParams();
+				// var params = new URLSearchParams();
 				item = item.Item
-				params.append("title",item.title);
-				params.append("author",item.author);
-				params.append("price",item.itemPrice);
-				params.append("img_url",item.largeImageUrl);
-				params.append("rakuten_page_url",item.itemUrl);
-				params.append("user_id",this.$route.params.id);
+				// params.append("title",item.title);
+				// params.append("author",item.author);
+				// params.append("price",item.itemPrice);
+				// params.append("img_url",item.largeImageUrl);
+				// params.append("rakuten_page_url",item.itemUrl);
+				// params.append("user_id",this.$route.params.id);
 
-				axios.post("http://localhost:8888/regist/book/",params)
+				axios.post("http://localhost:8888/register/book/",{
+					title:item.title,
+					author:item.author,
+					price:item.itemPrice,
+					img_url:item.largeImageUrl,
+					rakuten_page_url:item.itemUrl,
+					isbn:item.isbn,
+				})
 					.then(res => {
 						alert("登録が完了しました。")
 					})

@@ -6,6 +6,7 @@ CREATE TABLE books (
   price INT(11) UNSIGNED NOT NULL,
   img_url VARCHAR(255),
   page_url VARCHAR(255),
+  isbn VARCHAR(20) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
