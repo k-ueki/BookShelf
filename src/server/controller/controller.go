@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
@@ -240,11 +241,26 @@ func (u *DBHandler) RegisterBook(w http.ResponseWriter, r *http.Request) (int, i
 	}
 
 	bookService := service.NewBookService(u.DB)
-	if err := bookService.IsExists(book.Isbn); err != true {
-		_, err := repository.Insert(u.DB, *book)
+
+	bookId, err := bookService.IsExists(book.Isbn)
+	if err != true {
+		result, err := repository.Insert(u.DB, *book)
 		if err != nil {
 			return http.StatusInternalServerError, nil, errors.New("failed to register the book")
 		}
+
+		tmpId, err := result.LastInsertId()
+		if err != nil {
+			return http.StatusInternalServerError, nil, errors.New("failed to register the book")
+		}
+
+		*bookId = tmpId
+	}
+
+	user_id, _ := strconv.ParseInt("1", 10, 64)
+	_, erro := repository.RegisterBookAndUser(u.DB, user_id, *bookId)
+	if erro != nil {
+		return http.StatusInternalServerError, nil, errors.New("failed to register the book")
 	}
 
 	return http.StatusOK, nil, nil
