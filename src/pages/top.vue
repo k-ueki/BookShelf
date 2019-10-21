@@ -35,7 +35,8 @@
 				<span style="color:rgba(0,0,0,0.4);">Communities</span>
 				<div v-for="com in communities">
 					<div>
-						<router-link :to="{name:'CommunityDetail',params:{id:com.id,name:com.name},query:{com_id:com.id}}">
+						<!-- <router&#45;link :to="{name:'CommunityDetail',params:{id:com.id,name:com.name},query:{com_id:com.id}}"> -->
+						<router-link :to="{name:'CommunityDetail',params:{com_id:com.id,name:com.name}}">
 							<a @click="selectCommunity(com.id)">
 								{{com.name}}
 							</a>

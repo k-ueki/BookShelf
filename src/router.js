@@ -37,7 +37,7 @@ const router = new VueRouter({
 			component:CommunityAdd
 		},
 		{
-			path:"/community/:com_id",
+			path:"/community/",
 			name:"CommunityDetail",
 			component:CommunityDetail,
 		}

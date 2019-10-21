@@ -92,7 +92,7 @@ export default{
 		}
 	},
 	created:function(){
-		axios.get("http://localhost:8888/top/community/"+this.$route.query['com_id'])
+		axios.get("http://localhost:8888/top/community/"+this.$route.params['com_id'])
 			.then(res=>{
 
 			}).catch(res=>{
