@@ -53,7 +53,7 @@ func (c *Community) GetCommunitiesByUid(uid string) ([]model.Community, error) {
 	return *communities, nil
 }
 
-func (c *Community) Register(req *model.Community) (*model.Community, error) {
+func (c *Community) Register(userId int64, req *model.Community) (*model.Community, error) {
 	result, err := repository.CreateNewCommunity(c.DB, req)
 	if err != nil {
 		return nil, err
@@ -63,6 +63,12 @@ func (c *Community) Register(req *model.Community) (*model.Community, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	sl := []int64{userId}
+	if err := c.Create(sl, comid); err != nil {
+		return nil, err
+	}
+	fmt.Println("ok")
 
 	res := req
 	res.Id = comid
