@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/k-ueki/app2/src/server/model"
 	"github.com/k-ueki/app2/src/server/service"
 )
@@ -25,4 +26,14 @@ func (u *DBHandler) CreateCommunity(w http.ResponseWriter, r *http.Request) (int
 	fmt.Println("com", com)
 
 	return http.StatusOK, nil, nil
+}
+
+func (u *DBHandler) GetTheCommunityInfo(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	vars := mux.Vars(r)
+	uid := vars["com_id"]
+
+	fmt.Println("uid", uid)
+
+	return http.StatusOK, nil, nil
+
 }
