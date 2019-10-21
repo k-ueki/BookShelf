@@ -94,7 +94,9 @@ export default{
 	created:function(){
 		axios.get("http://localhost:8888/top/community/"+this.$route.params['com_id'])
 			.then(res=>{
-
+				this.name = res.data.community.name
+				this.members = res.data.users
+				this.booksinfo = res.data.books
 			}).catch(res=>{
 				console.log("err",res)
 			})

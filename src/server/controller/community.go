@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/k-ueki/app2/src/server/model"
@@ -11,6 +12,10 @@ import (
 )
 
 var userId int64 = 6
+
+type Community struct {
+	DB *DBHandler
+}
 
 func (u *DBHandler) CreateCommunity(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	req := &model.Community{}
@@ -30,10 +35,18 @@ func (u *DBHandler) CreateCommunity(w http.ResponseWriter, r *http.Request) (int
 
 func (u *DBHandler) GetTheCommunityInfo(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	vars := mux.Vars(r)
-	uid := vars["com_id"]
+	tmp := vars["com_id"]
+	cid, err := strconv.Atoi(tmp)
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
 
-	fmt.Println("uid", uid)
+	CommunityService := service.NewCommunityService(u.DB)
+	res, err := CommunityService.GetAll(cid)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
 
-	return http.StatusOK, nil, nil
+	return http.StatusOK, res, nil
 
 }
