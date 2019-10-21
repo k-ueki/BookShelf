@@ -11,13 +11,13 @@
 					<div class="modalinfo" align="center" style="float:right;">
 						<!--
 						-->
-						<tr><img class="personalbooksIMG" :src="clickedbook.ImgUrl"></tr>
-						<tr class="">{{ clickedbook.Title }}</tr>
-						<tr class="">{{ clickedbook.Author }}</tr>
-						<tr class="">{{ clickedbook.Price }}円</tr>
-						<tr class=""><a :href="clickedbook.RakutenPageUrl">楽天ページ</a></tr>
-						{{indextmp}}
-						<tr class=""><button style="cursor:pointer;" @click="delBook(clickedbook,indextmp)">削除</button></tr>
+						<tr><img class="personalbooksIMG" :src="clickedbook.img_url"></tr>
+						<tr class="">{{ clickedbook.title }}</tr>
+						<tr class="">{{ clickedbook.author }}</tr>
+						<tr class="">{{ clickedbook.price }}円</tr>
+						<tr class=""><a :href="clickedbook.rakuten_page_url">楽天ページ</a></tr>
+						<!-- {{indextmp}} -->
+						<tr class=""><v-btn style="cursor:pointer;color:red;" @click="delBook(clickedbook,indextmp)">削除</v-btn></tr>
 					</div>
 				</div>
 			</div>
@@ -34,7 +34,11 @@
 				<br/>
 				<span style="color:rgba(0,0,0,0.4);">Communities</span>
 				<div v-for="com in communities">
-					{{com.name}}
+					<div>
+						<a>
+							{{com.name}}
+						</a>
+					</div>
 				</div>
             </div>
             <div class="bookshelf-parsonal-wrapper">
@@ -82,8 +86,8 @@
 
 
 				<ul>
-					<li class="personalbookWrapper" v-for="(info,index) in booksinfo" @click="bookDetail(info,index)" style="cursor:pointer;">
-						<tr><img class="personalbooksIMG" :src="info.ImgUrl"></tr>
+					<li class="personalbookWrapper" v-for="(info,index) in booksinfo" @click="bookDetail(info,index)" style="cursor:pointer;width:250px;float:left;">
+						<tr><img class="personalbooksIMG" :src="info.img_url"></tr>
 						<tr class="personalbooks">{{ info.title }}</tr>
 						<tr class="personalbooks">{{ info.author }}</tr>
 						<tr class="personalbooks">{{ info.price }}円</tr>
@@ -163,6 +167,7 @@ export default{
 								this.name = res.data.name;
 								this.booksinfo = res.data.books;
 								this.communities = res.data.communities;
+								console.log("img",res.data.books[1].img_url)
 							}).catch(err => {
 								this.errorStatus = "Error: Network Error";
 							})
@@ -202,6 +207,7 @@ export default{
 		bookDetail(info,index){
 			this.indextmp = index
 			this.clickedbook = info
+			console.log("info",info)
 			if(!this.showModal){
 				this.showModal=true;
 			}
@@ -317,7 +323,7 @@ export default{
 .personalbooksIMG{
 }
 .personalbookWrapper{
-	border-bottom:1px solid rgba(0,0,0,0.4);
+	/* border-bottom:1px solid rgba(0,0,0,0.4); */
 	padding:5% 5%;
 }
 
