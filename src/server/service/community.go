@@ -68,7 +68,6 @@ func (c *Community) Register(userId int64, req *model.Community) (*model.Communi
 	if err := c.Create(sl, comid); err != nil {
 		return nil, err
 	}
-	fmt.Println("ok")
 
 	res := req
 	res.Id = comid
