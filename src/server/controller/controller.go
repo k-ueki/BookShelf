@@ -45,9 +45,16 @@ func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interfac
 	return http.StatusOK, resp, nil
 }
 
-func (u *DBHandler) Test(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func (u *DBHandler) Test(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("OK")
-	return http.StatusInternalServerError, nil, nil
+
+	cookie := http.Cookie{
+		Name:  "test",
+		Value: "test,",
+	}
+	http.SetCookie(w, &cookie)
+
+	// return http.StatusInternalServerError, nil, nil
 }
 
 func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
@@ -55,7 +62,14 @@ func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (
 	uid := vars["uid"]
 
 	userService := service.NewUserService(u.DB)
-	isExists := userService.IsExists(uid)
+	tmp, isExists := userService.IsExists(uid)
+	user_id := strconv.FormatInt(*tmp, 10)
+
+	cookie := http.Cookie{
+		Name:  "user_id",
+		Value: user_id,
+	}
+	http.SetCookie(w, &cookie)
 
 	return http.StatusOK, isExists, nil
 }
@@ -236,8 +250,6 @@ func (u *DBHandler) RegisterBook(w http.ResponseWriter, r *http.Request) (int, i
 		ImgUrl:  reqParam.ImgUrl,
 		PageUrl: &reqParam.PageUrl,
 		Isbn:    reqParam.Isbn,
-		// User_id:        user_id,
-		// Isbn: "123456789",
 	}
 
 	bookService := service.NewBookService(u.DB)
@@ -257,7 +269,16 @@ func (u *DBHandler) RegisterBook(w http.ResponseWriter, r *http.Request) (int, i
 		*bookId = tmpId
 	}
 
-	user_id, _ := strconv.ParseInt("1", 10, 64)
+	// cookie, _ := r.Cookie("user_id")
+	// if cookie == nil {
+	// 	return http.StatusBadRequest, nil, errors.New("not login")
+	// }
+	// uid := cookie.Value
+
+	//暫定
+	uid := "6"
+
+	user_id, _ := strconv.ParseInt(uid, 10, 64)
 	_, erro := repository.RegisterBookAndUser(u.DB, user_id, *bookId)
 	if erro != nil {
 		return http.StatusInternalServerError, nil, errors.New("failed to register the book")

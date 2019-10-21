@@ -52,3 +52,20 @@ func (c *Community) GetCommunitiesByUid(uid string) ([]model.Community, error) {
 	// fmt.Fprintf(w, string(marUsr))
 	return *communities, nil
 }
+
+func (c *Community) Register(req *model.Community) (*model.Community, error) {
+	result, err := repository.CreateNewCommunity(c.DB, req)
+	if err != nil {
+		return nil, err
+	}
+
+	comid, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	res := req
+	res.Id = comid
+
+	return res, nil
+}

@@ -29,9 +29,11 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	w.Write([]byte(response))
+	// w.WriteHeader(status)
+	if payload != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(response))
+	}
 }
 
 func respondErrorJson(w http.ResponseWriter, code int, err error) {

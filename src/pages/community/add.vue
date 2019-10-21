@@ -12,21 +12,21 @@
 				<div class="input-wrapper">
 					<div class="comNameflame">Community Name   :   
 					<input class="comName" v-model="CommunityName"/></div>
-					<div class="comMem" style="float:left;">Community Member :   
-						<div v-for="c in count" style=";">
-							<input class="comMembers" placeholder="@name" v-model="addname" @blur="blur()"/>
-							<button class="" @click="count+=1">+</button>
-								<!--
-							<ul v-show="flag" style="display:block;">
-								<li v-bind:class="Pclass" v-for="person in people" style="cursor:pointer;" @mouseover="focus()" @click="select(person)">
-									{{person.ID}}  {{person.Name}}
-								</li>
-							</ul>
-								-->
-							<div v-bind:class="" v-show="flag" v-for="person in filteredpeople" style="cursor:pointer;" 
-								  @mouseleave="leave()" @mouseover="focus()" @click="select(person)"><div v-bind:class="Pclass">{{person.ID}} {{person.Name}}</div></div>
-						</div>
-					</div>
+					<!-- <div class="comMem" style="float:left;">Community Member :    -->
+					<!-- 	<div v&#45;for="c in count" style=";"> -->
+					<!-- 		<input class="comMembers" placeholder="@name" v&#45;model="addname" @blur="blur()"/> -->
+					<!-- 		<button class="" @click="count+=1">+</button> -->
+					<!-- 			<!&#45;&#45; -->
+					<!-- 		<ul v&#45;show="flag" style="display:block;"> -->
+					<!-- 			<li v&#45;bind:class="Pclass" v&#45;for="person in people" style="cursor:pointer;" @mouseover="focus()" @click="select(person)"> -->
+					<!-- 				{{person.ID}}  {{person.Name}} -->
+					<!-- 			</li> -->
+					<!-- 		</ul> -->
+					<!-- 			&#45;&#45;> -->
+					<!-- 		<div v&#45;bind:class="" v&#45;show="flag" v&#45;for="person in filteredpeople" style="cursor:pointer;"  -->
+					<!-- 			  @mouseleave="leave()" @mouseover="focus()" @click="select(person)"><div v&#45;bind:class="Pclass">{{person.ID}} {{person.Name}}</div></div> -->
+					<!-- 	</div> -->
+					<!-- </div> -->
 				</div>
 				<div class="btn-wrapper" style="text-align:center;">
 					 <button class="create-com-button" style="" @click="decide()">決定</button>
@@ -133,13 +133,17 @@ export default{
 				})
 		},
 		decide(){
-			var params = new URLSearchParams();
-			params.append("CommunityName",this.CommunityName);
-			params.append("CommunityMembers",this.addname);
+			// var params = new URLSearchParams();
+			// params.append("CommunityName",this.CommunityName);
+			// params.append("CommunityMembers",this.addname);
 
-			axios.post("http://localhost:8888/community/add/",params)
+			axios.post("http://localhost:8888/community/add/",{
+				Name:this.CommunityName,
+			})
 				.then(res =>{
-
+					console.log(this.CommunityName)
+				}).catch(res=>{
+					console.log("error")
 				})
 		}
 	}

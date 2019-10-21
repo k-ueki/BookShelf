@@ -47,11 +47,14 @@
         <!-- </header> -->
 </template>
 <script>
+import axios from 'axios'
+
 export default{
 	methods:{
 		logout(){
 			console.log("logout ok")
 			console.log("logout()")
+			axios.get("http://localhost:8888/hc")
 			// firebase.auth().signout().then(()=>
 			//  console.log("success for logout!")
 			//  )

@@ -33,3 +33,15 @@ func CreateCommunity(db *sqlx.DB, sess *dbr.Session, coms []model.CommunityParam
 	}
 	return stmt.Exec()
 }
+
+func CreateNewCommunity(db *sqlx.DB, req *model.Community) (sql.Result, error) {
+
+	stmt, err := db.Prepare(`
+INSERT INTO communities (name) VALUES (?)
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+	return stmt.Exec(req.Name)
+}

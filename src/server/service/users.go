@@ -39,12 +39,12 @@ func (u *User) Index(uid string) (interface{}, error) {
 	return res, nil
 }
 
-func (u *User) IsExists(uid string) bool {
-	_, err := repository.IsExistsUserByUid(u.DB, uid)
+func (u *User) IsExists(uid string) (*int64, bool) {
+	user, err := repository.IsExistsUserByUid(u.DB, uid)
 	if err != nil {
-		return false
+		return nil, false
 	}
-	return true
+	return &user.Id, true
 }
 
 func main() {}
