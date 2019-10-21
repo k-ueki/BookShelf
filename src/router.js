@@ -6,6 +6,7 @@ import Signup from '@/pages/signup'
 import Top from '@/pages/top'
 import Regist from '@/pages/register'
 import CommunityAdd from '@/pages/community/add'
+import CommunityDetail from '@/pages/community/detail'
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,11 @@ const router = new VueRouter({
 			path:'/community/add/',
 			name:"CommunityAdd",
 			component:CommunityAdd
+		},
+		{
+			path:"/community/:com_id",
+			name:"CommunityDetail",
+			component:CommunityDetail,
 		}
 	]
 })

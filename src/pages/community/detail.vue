@@ -16,55 +16,33 @@
 						<tr class="">{{ clickedbook.author }}</tr>
 						<tr class="">{{ clickedbook.price }}円</tr>
 						<tr class=""><a :href="clickedbook.rakuten_page_url">楽天ページ</a></tr>
-						<!-- {{indextmp}} -->
 						<tr class=""><v-btn style="cursor:pointer;color:red;" @click="delBook(clickedbook,indextmp)">削除</v-btn></tr>
 					</div>
 				</div>
 			</div>
 
             <div class="parsonal-sp">
-                <!--top-image-->
-				<!--
-                <img class="parsonal-icon" href="../../images/{$parsonal_info.image}">
-				-->
-				<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
+				<img class="iconSelf" src="../../../images/library-1147815_1920.jpg"> 
 				<div class="parsonal-name"> {{ name }}</div>
 				<div class="">{{userid}}</div>
 
 				<br/>
-				<span style="color:rgba(0,0,0,0.4);">Communities</span>
-				<div v-for="com in communities">
+				<span style="color:rgba(0,0,0,0.4);">members</span>
+				<div v-for="mem in members">
 					<div>
-						<router-link :to="{name:'CommunityDetail',params:{id:com.id,name:com.name},query:{com_id:com.id}}">
-							<a @click="selectCommunity(com.id)">
-								{{com.name}}
-							</a>
-						</router-link>
+						<a>
+							{{mem.name}}
+						</a>
 					</div>
 				</div>
             </div>
+
             <div class="bookshelf-parsonal-wrapper">
-                <!--search-->
                 <div class="mini-header">
-					<router-link :to="{
-						name:'Regist',
-						params:{
-							id: id 
-						}
-					}">
-						<v-btn
-							text
-							target="_blank"
-							><span>+</span></v-btn></router-link>
-					<router-link :to="{
-						name:'CommunityAdd' 
-						}"
-					>
 					<v-btn
 						text
 						target="_blank"
-						><span>community add</span></v-btn></router-link>
-					<!-- <div class="searchWrap"><input type="search" name="word&#45;search" class="word&#45;search" placeholder="検索ワード"></div> -->
+						><span>member add</span></v-btn>
 					<div class="searchWrap">
 						<v-form>
 							<v-text-field
@@ -76,16 +54,7 @@
 							text
 							target="_blank"
 							>検索</v-btn></div>
-
-				<!-- 	<div class="selectWrap"><select name="refine"> -->
-                <!--         <option value="order">新着順</option> -->
-                <!--         <option value=""></option> -->
-				<!-- 		</select></div> -->
                 </div>
-
-
-
-
 
 				<ul>
 					<li class="personalbookWrapper" v-for="(info,index) in booksinfo" @click="bookDetail(info,index)" style="cursor:pointer;width:250px;float:left;">
@@ -93,10 +62,6 @@
 						<tr class="personalbooks">{{ info.title }}</tr>
 						<tr class="personalbooks">{{ info.author }}</tr>
 						<tr class="personalbooks">{{ info.price }}円</tr>
-						<!--
-						<tr class="personalbooks"><p>楽天ページ</p></tr>
-						{{info}}
-						-->
 					</li>
 				</ul>
             </div>
@@ -104,23 +69,13 @@
 	</v-app>
 </template>
 <script>
-import HelloWorld from '../components/HelloWorld.vue'
-import Header from '../components/header.vue'
-//import Modal from '../components/modal.vue'
+import HelloWorld from '../../components/HelloWorld.vue'
+import Header from '../../components/header.vue'
 						
 import firebase from 'firebase'
-import router from '../router.js'
+import router from '../../router.js'
 
 import axios from 'axios'
-
-const firebaseConfig = {
-  apiKey: process.env.VUE_APP_FIREBASE_APIKEY,
-  authDomain: process.env.VUE_APP_FIREBASE_AUTHDOMAIN,
-  databaseURL: process.env.VUE_APP_FIREBASE_DATABASEURL,
-  projectId: process.env.VUE_APP_FIREBASE_PROJECTID,
-  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGINGSENDERID,
-  appId: process.env.VUE_APP_FIREBASE_APPID
-}
 
 export default{
 	name: 'top',
@@ -133,60 +88,16 @@ export default{
 			clickedbook:'',
 			indextmp:'',
 			userid:'',
-			communities:'',
+			members:[],
 		}
 	},
 	created:function(){
-		firebase.initializeApp(firebaseConfig);
-		firebase.auth().onAuthStateChanged((user) => {
-		  if (user) {
-		    // サインイン済み
-			  console.log("LOGINOK")
+		axios.post("http://localhost:8888/"+this.$route.query['com_id'])
+			.then(res=>{
 
-			  let uid
-			  uid = user.uid
-
-			  axios.get("http://localhost:8888/user/" + uid)
-				  .then(res=>{
-					  if(res.data){
-						axios.get("http://localhost:8888/top/" + uid)
-							.then(res => {
-								console.log("res",res.data)
-								this.name = res.data.name;
-								this.booksinfo = res.data.books;
-								this.communities = res.data.communities;
-								console.log("img",res.data.books[1].img_url)
-							}).catch(err => {
-								this.errorStatus = "Error: Network Error";
-							})
-					  }else{
-						  let params = new URLSearchParams();
-						  params.append('uid',uid);
-						  params.append('name',user.displayName);
-
-						  axios.post("http://localhost:8888/user",params)
-							  .then(res=>{
-								this.name = user.displayName
-							  }).catch(err=>{
-								this.errorStatus = "Error: Network Error"
-							  })
-					  }
-				  })
-
-		  } else {
-		    // サインインしていない状態
-		    // サインイン画面に遷移する等
-		    // 例:
-			  // router.push('/')
-			  console.log('not login')
-		  }
-		});
-
-		// var query = Object.assign({}, this.$route.query)
-		// var params = new URLSearchParams();
-		// params.append("id",query.id);
-		// console.log("QUERYID",query.id)
-		// axios.get("http://localhost:8888/top/?uid="+query.id,params)
+			}).catch(res=>{
+				console.log("err",res)
+			})
 	},
 	methods:{
 		bookDetail(info,index){
@@ -196,15 +107,6 @@ export default{
 			if(!this.showModal){
 				this.showModal=true;
 			}
-//			var params = new URLSearchParams();
-//			params.append("id",info.Id);
-//			axios.post("http://localhost:8888/top/booksInfo/",params)
-//				.then(res => {
-//					console.log(res.data)
-//				}).catch(err => {
-//
-//				})
-//			console.log(info)
 		},
 		closemodal(){
 			this.showModal=false;
@@ -215,21 +117,12 @@ export default{
 			params.append("delid",book.Id);
 			if(confirm(book.Title+" を削除しますか？")){
 				// axios.post("http://localhost:8888/top/del/",params)
-				// 	.then(res => {
-				// 		this.showModal=false
-				// 	}).catch(err => {
-                //
-				// 	})
 			}
-		},
-		selectCommunity(id){
-			console.log("comid",id)
 		}
 	},
 	components:{
 		HelloWorld,
 		Header,
-		//Modal
 	}
 }
 </script>
