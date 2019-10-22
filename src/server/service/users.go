@@ -36,6 +36,12 @@ func (u *User) Index(uid string) (interface{}, error) {
 	res.Books = *books
 	res.Communities = *coms
 
+	dname, err := repository.SelectDispNameByUid(u.DB, uid)
+	if err != nil {
+		return res, nil
+	}
+	res.DispName = *dname
+
 	return res, nil
 }
 
@@ -47,4 +53,25 @@ func (u *User) IsExists(uid string) (*int64, bool) {
 	return &user.Id, true
 }
 
+func (u *User) IsOKUserId(uid int, disp_name string) (bool, error) {
+	info, _ := repository.GetDispInfoByUsrId(u.DB, uid)
+	if info != nil {
+		return false, nil
+	}
+
+	info, _ = repository.IsExistsByDispName(u.DB, disp_name)
+	if info != nil {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (u *User) RegisterUserId(Uid int, dispname string) error {
+	_, err := repository.RegisterUid(u.DB, Uid, dispname)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func main() {}

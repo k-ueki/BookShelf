@@ -35,19 +35,17 @@ type Res struct {
 func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	vars := mux.Vars(r)
 	uid := vars["uid"]
+	fmt.Println(uid)
 
 	userService := service.NewUserService(u.DB)
 	resp, err := userService.Index(uid)
 	if err != nil {
-		fmt.Println("errorだ!")
 		return http.StatusInternalServerError, nil, err
 	}
 	return http.StatusOK, resp, nil
 }
 
 func (u *DBHandler) Test(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("OK")
-
 	cookie := http.Cookie{
 		Name:  "test",
 		Value: "test,",
@@ -64,12 +62,13 @@ func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (
 	userService := service.NewUserService(u.DB)
 	tmp, isExists := userService.IsExists(uid)
 	user_id := strconv.FormatInt(*tmp, 10)
+	fmt.Println(user_id)
 
-	cookie := http.Cookie{
-		Name:  "user_id",
-		Value: user_id,
-	}
-	http.SetCookie(w, &cookie)
+	// cookie := http.Cookie{
+	// 	Name:  "user_id",
+	// 	Value: user_id,
+	// }
+	// http.SetCookie(w, &cookie)
 
 	return http.StatusOK, isExists, nil
 }
@@ -85,6 +84,33 @@ func (u *DBHandler) RegisterUser(w http.ResponseWriter, r *http.Request) (int, i
 	}
 
 	return http.StatusCreated, nil, nil
+}
+
+func (u *DBHandler) RegisterUserId(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	type user struct {
+		UserId   int    `json:"user_id"`
+		DispName string `json:"disp_name"`
+	}
+
+	req := &user{}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	UserService := service.NewUserService(u.DB)
+	flagOK, err := UserService.IsOKUserId(req.UserId, req.DispName)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	if !flagOK {
+		return http.StatusBadRequest, nil, errors.New("already exists")
+	}
+
+	if err := UserService.RegisterUserId(req.UserId, req.DispName); err != nil {
+		return http.StatusInternalServerError, nil, nil
+	}
+
+	return http.StatusOK, nil, nil
 }
 
 //Personal Info をIDから取得
