@@ -22,20 +22,32 @@
 			</div>
 
 			<div class="modal" v-show="showModalMemAdd">
-				<div>
-					<div class="modalHeader" style="float:right;">
+				<!-- <div style="float:right;"> -->
+				<!-- 		<div style="cursor:pointer;" @click="closemodalMemAdd">X</div> -->
+				<!-- </div> -->
+				<div style="height:100%;width:100%;">
+					<div class="modalHeader" style="float:right;height:5%;">
 						<div style="cursor:pointer;" @click="closemodalMemAdd">X</div>
 					</div>
-					<!-- <div class="modalinfo" align="center" style="float:right;"> -->
-					<!-- 	<!&#45;&#45; -->
-					<!-- 	&#45;&#45;> -->
-					<!-- 	<tr><img class="personalbooksIMG" :src="clickedbook.img_url"></tr> -->
-					<!-- 	<tr class="">{{ clickedbook.title }}</tr> -->
-					<!-- 	<tr class="">{{ clickedbook.author }}</tr> -->
-					<!-- 	<tr class="">{{ clickedbook.price }}円</tr> -->
-					<!-- 	<tr class=""><a :href="clickedbook.rakuten_page_url">楽天ページ</a></tr> -->
-					<!-- 	<tr class=""><v&#45;btn style="cursor:pointer;color:red;" @click="delBook(clickedbook,indextmp)">削除</v&#45;btn></tr> -->
-					<!-- </div> -->
+					<div style="float:left;height:50%;width:30%;" class="addition-sp">
+						<div v-for="">
+							<input placeholder="name" v-model="addname">
+							<v-btn @click="plus">+</v-btn>
+						</div>
+					</div>
+					<div style="float:left;border:solid 2px red;height:95%;width:50%;" class="add-list-sp">
+						<div style="border-bottom=solid 2px red;">
+							<table>
+								<th>Id</th>
+								<th>Name</th>
+								<tr v-for="co in count">
+									<td>{{ids[co]}}</td>
+									<td>{{names[co]}}</td>
+								</tr>
+							</table>
+						</div>
+						<v-btn><span>決定</span></v-btn>
+					</div>
 				</div>
 			</div>
 
@@ -111,6 +123,10 @@ export default{
 			indextmp:'',
 			userid:'',
 			members:[],
+			count:1,
+			names:[],
+			ids:[],
+			addname:"",
 		}
 	},
 	created:function(){
@@ -142,6 +158,7 @@ export default{
 		},
 		closemodalMemAdd(){
 			this.showModalMemAdd=false;
+			this.count=1;
 		},
 		delBook(book,index){
 			this.booksinfo.splice(index,1)
@@ -149,6 +166,24 @@ export default{
 			params.append("delid",book.Id);
 			if(confirm(book.Title+" を削除しますか？")){
 				// axios.post("http://localhost:8888/top/del/",params)
+			}
+		// },
+		// countMinus(){
+		// 	if(this.count>1){
+		// 		this.count--;
+		// 	}else{
+		// 		//this.name=""
+		// 	}
+		},
+		plus(){
+			if(this.addname==""){
+				alert("no name")
+			}else{
+				this.names[this.count] = this.addname
+				this.ids[this.count]=this.count//暫定
+				this.count++
+				this.addname=""
+				console.log(this.names)
 			}
 		}
 	},
@@ -251,6 +286,7 @@ export default{
 	width:50%;
 	height:50%;
 	background:#ffff;
+	border:solid 3px red;
 }
 .overlay{
 	display: flex;
@@ -266,6 +302,7 @@ export default{
 }
 .modalHeader{
 	align:right;
+	background-color:rgba(144,24,38,0.5);
 }
 
 .mem-icon{
@@ -273,5 +310,22 @@ export default{
 	height:30px;
 	border-radius:50%;
 	margin-top:10px;
+}
+
+.add-list-sp{
+    width:100%;
+    height:100%;
+    float:right;
+	/* background-color:rgb(255,255,255); */
+	background-color:rgba(25,177,140,0.5);
+}
+
+.addition-sp{
+	/* background-color:rgb(255,255,255); */
+	background-color:rgba(144,190,240,0.5);
+    width:100%;
+    height:100%;
+    float:left;
+    text-align:center;
 }
 </style>
