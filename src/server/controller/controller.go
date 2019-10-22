@@ -62,11 +62,12 @@ func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (
 	tmp, isExists := userService.IsExists(uid)
 	user_id := strconv.FormatInt(*tmp, 10)
 
-	cookie := http.Cookie{
-		Name:  "user_id",
-		Value: user_id,
-	}
-	http.SetCookie(w, &cookie)
+	fmt.Println(user_id)
+	// cookie := http.Cookie{
+	// 	Name:  "user_id",
+	// 	Value: user_id,
+	// }
+	// http.SetCookie(w, &cookie)
 
 	return http.StatusOK, isExists, nil
 }
@@ -101,7 +102,7 @@ func (u *DBHandler) RegisterUserId(w http.ResponseWriter, r *http.Request) (int,
 		return http.StatusInternalServerError, nil, err
 	}
 	if !flagOK {
-		return http.StatusBadRequest, nil, nil
+		return http.StatusBadRequest, nil, errors.New("already exists")
 	}
 
 	// _, err := UserService.RegisterUserId(req)
