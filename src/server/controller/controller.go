@@ -62,8 +62,8 @@ func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (
 	userService := service.NewUserService(u.DB)
 	tmp, isExists := userService.IsExists(uid)
 	user_id := strconv.FormatInt(*tmp, 10)
-
 	fmt.Println(user_id)
+
 	// cookie := http.Cookie{
 	// 	Name:  "user_id",
 	// 	Value: user_id,
@@ -98,7 +98,7 @@ func (u *DBHandler) RegisterUserId(w http.ResponseWriter, r *http.Request) (int,
 	}
 
 	UserService := service.NewUserService(u.DB)
-	flagOK, err := UserService.IsOKUserId(req.DispName)
+	flagOK, err := UserService.IsOKUserId(req.UserId, req.DispName)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}

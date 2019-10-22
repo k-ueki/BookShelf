@@ -53,8 +53,13 @@ func (u *User) IsExists(uid string) (*int64, bool) {
 	return &user.Id, true
 }
 
-func (u *User) IsOKUserId(disp_name string) (bool, error) {
-	info, _ := repository.IsExistsByDispName(u.DB, disp_name)
+func (u *User) IsOKUserId(uid int, disp_name string) (bool, error) {
+	info, _ := repository.GetDispInfoByUsrId(u.DB, uid)
+	if info != nil {
+		return false, nil
+	}
+
+	info, _ = repository.IsExistsByDispName(u.DB, disp_name)
 	if info != nil {
 		return false, nil
 	}
