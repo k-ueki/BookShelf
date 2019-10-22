@@ -23,13 +23,15 @@
 
             <div class="parsonal-sp">
 				<img class="iconSelf" src="../../../images/library-1147815_1920.jpg"> 
-				<div class="parsonal-name"> {{ name }}</div>
-				<div class="">{{userid}}</div>
+				<div class="com-name" style="font-size:25;"> {{ name }} </div>
 
 				<br/>
 				<span style="color:rgba(0,0,0,0.4);">members</span>
 				<div v-for="mem in members">
 					<div>
+						<a>
+							<!-- <img class="mem&#45;icon" :src="mem.photo_url">  -->
+						</a>
 						<a>
 							{{mem.name}}
 						</a>
@@ -236,5 +238,12 @@ export default{
 }
 .modalHeader{
 	align:right;
+}
+
+.mem-icon{
+	width:30px;;
+	height:30px;
+	border-radius:50%;
+	margin-top:10px;
 }
 </style>
