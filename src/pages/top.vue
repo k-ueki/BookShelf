@@ -22,8 +22,8 @@
 				</div>
 			</div>
 
-			<div class="overlay" v-if="userid==''"></div>
-			<div class="modal" v-if="userid==''">
+			<div class="overlay" v-show="showModalUserId"></div>
+			<div class="modal" v-show="showModalUserId">
 				<div>
 					<div class="modalHeader" style="float:left;">
 						<!-- <div style="cursor:pointer;" @click="closemodal">X</div> -->
@@ -47,7 +47,7 @@
 				-->
 				<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
 				<div class="parsonal-name"> {{ name }}</div>
-				<div class="">@{{userid}}<span v-if="userid==''" style="color:red;">no user_id</span></div>
+					<div class="">@{{userid}}</div>
 
 				<br/>
 				<span style="color:rgba(0,0,0,0.4);">Communities</span>
@@ -153,6 +153,7 @@ export default{
 			userid:'',
 			communities:'',
 			inputUserId:'',
+			showModalUserId:false,
 		}
 	},
 	created:function(){
@@ -177,6 +178,9 @@ export default{
 								this.userid = res.data.disp_name;
 								this.booksinfo = res.data.books;
 								this.communities = res.data.communities;
+								if(this.userid==''){
+									this.showModalUserId=true;
+								}
 								console.log("img",res.data.books[1].img_url)
 							}).catch(err => {
 								this.errorStatus = "Error: Network Error";
