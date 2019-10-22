@@ -21,6 +21,24 @@
 				</div>
 			</div>
 
+			<div class="modal" v-show="showModalMemAdd">
+				<div>
+					<div class="modalHeader" style="float:right;">
+						<div style="cursor:pointer;" @click="closemodalMemAdd">X</div>
+					</div>
+					<!-- <div class="modalinfo" align="center" style="float:right;"> -->
+					<!-- 	<!&#45;&#45; -->
+					<!-- 	&#45;&#45;> -->
+					<!-- 	<tr><img class="personalbooksIMG" :src="clickedbook.img_url"></tr> -->
+					<!-- 	<tr class="">{{ clickedbook.title }}</tr> -->
+					<!-- 	<tr class="">{{ clickedbook.author }}</tr> -->
+					<!-- 	<tr class="">{{ clickedbook.price }}円</tr> -->
+					<!-- 	<tr class=""><a :href="clickedbook.rakuten_page_url">楽天ページ</a></tr> -->
+					<!-- 	<tr class=""><v&#45;btn style="cursor:pointer;color:red;" @click="delBook(clickedbook,indextmp)">削除</v&#45;btn></tr> -->
+					<!-- </div> -->
+				</div>
+			</div>
+
             <div class="parsonal-sp">
 				<img class="iconSelf" src="../../../images/library-1147815_1920.jpg"> 
 				<div class="com-name" style="font-size:25;"> {{ name }} </div>
@@ -44,6 +62,7 @@
 					<v-btn
 						text
 						target="_blank"
+						@click="memAddition"
 						><span>member add</span></v-btn>
 					<div class="searchWrap">
 						<v-form>
@@ -86,6 +105,7 @@ export default{
 			id:'',
 			name:"",
 			showModal:false,
+			showModalMemAdd:false,
 			booksinfo:'',
 			clickedbook:'',
 			indextmp:'',
@@ -112,8 +132,16 @@ export default{
 				this.showModal=true;
 			}
 		},
+		memAddition(){
+			if(!this.showModalMemAdd){
+				this.showModalMemAdd=true
+			}
+		},
 		closemodal(){
 			this.showModal=false;
+		},
+		closemodalMemAdd(){
+			this.showModalMemAdd=false;
 		},
 		delBook(book,index){
 			this.booksinfo.splice(index,1)
