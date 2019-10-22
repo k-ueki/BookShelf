@@ -35,6 +35,7 @@ type Res struct {
 func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	vars := mux.Vars(r)
 	uid := vars["uid"]
+	fmt.Println(uid)
 
 	userService := service.NewUserService(u.DB)
 	resp, err := userService.Index(uid)

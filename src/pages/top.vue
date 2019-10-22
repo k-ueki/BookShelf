@@ -47,7 +47,7 @@
 				-->
 				<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
 				<div class="parsonal-name"> {{ name }}</div>
-				<div class="">{{userid}}<span v-if="userid==''" style="">no user_id</span></div>
+				<div class="">@{{userid}}<span v-if="userid==''" style="">no user_id</span></div>
 
 				<br/>
 				<span style="color:rgba(0,0,0,0.4);">Communities</span>
@@ -174,6 +174,7 @@ export default{
 								console.log("res",res.data)
 								this.id = res.data.id;
 								this.name = res.data.name;
+								this.userid = res.data.disp_name;
 								this.booksinfo = res.data.books;
 								this.communities = res.data.communities;
 								console.log("img",res.data.books[1].img_url)

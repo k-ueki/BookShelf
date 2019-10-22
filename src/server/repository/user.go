@@ -9,7 +9,7 @@ import (
 
 func SelectUserByUid(db *sqlx.DB, uid string) (*model.User, error) {
 	usr := model.User{}
-	if err := db.Get(&usr, `SELECT id,name,photo_url FROM users WHERE firebase_uid=?`, uid); err != nil {
+	if err := db.Get(&usr, `SELECT users.id,users.name,users.photo_url,user_id.disp_name FROM users INNER JOIN user_id ON user_id.user_id = users.id WHERE users.firebase_uid=?`, uid); err != nil {
 		return nil, err
 	}
 	return &usr, nil
