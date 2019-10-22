@@ -22,23 +22,23 @@
 				</div>
 			</div>
 
-			<!-- <div class="overlay" v&#45;if="userid==''"></div> -->
-			<!-- <div class="modal" v&#45;if="userid==''"> -->
-			<!-- 	<div> -->
-			<!-- 		<div class="modalHeader" style="float:left;"> -->
-			<!-- 			<!&#45;&#45; <div style="cursor:pointer;" @click="closemodal">X</div> &#45;&#45;> -->
-			<!-- 			<span>{{name}} さんuser_idを登録しましょう！</span> -->
-			<!-- 		</div> -->
-			<!-- 		<br/><br/> -->
-			<!-- 		<div class="modalinfo" align="center" style=""> -->
-			<!-- 			<!&#45;&#45; <tr><img class="" :src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"></tr> &#45;&#45;> -->
-			<!-- 			<tr> -->
-			<!-- 				<span>user_id:</span><input v&#45;model="inputUserId" style="border&#45;bottom:solid 1px black;"></input> -->
-			<!-- 			</tr> -->
-			<!-- 			<tr class=""><v&#45;btn style="cursor:pointer;color:red;" @click="registerUserId(inputUserId,id)">登録</v&#45;btn></tr> -->
-			<!-- 		</div> -->
-			<!-- 	</div> -->
-			<!-- </div> -->
+			<div class="overlay" v-if="userid==''"></div>
+			<div class="modal" v-if="userid==''">
+				<div>
+					<div class="modalHeader" style="float:left;">
+						<!-- <div style="cursor:pointer;" @click="closemodal">X</div> -->
+						<span>{{name}} さんuser_idを登録しましょう！</span>
+					</div>
+					<br/><br/>
+					<div class="modalinfo" align="center" style="">
+						<!-- <tr><img class="" :src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"></tr> -->
+						<tr>
+							<span>user_id:</span><input v-model="inputUserId" style="border-bottom:solid 1px black;"></input>
+						</tr>
+						<tr class=""><v-btn style="cursor:pointer;color:red;" @click="registerUserId(inputUserId,id)">登録</v-btn></tr>
+					</div>
+				</div>
+			</div>
 
             <div class="parsonal-sp">
                 <!--top-image-->
@@ -47,7 +47,7 @@
 				-->
 				<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
 				<div class="parsonal-name"> {{ name }}</div>
-				<div class="">@{{userid}}<span v-if="userid==''" style="">no user_id</span></div>
+				<div class="">@{{userid}}<span v-if="userid==''" style="color:red;">no user_id</span></div>
 
 				<br/>
 				<span style="color:rgba(0,0,0,0.4);">Communities</span>
