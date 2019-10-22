@@ -53,6 +53,32 @@ func (c *Community) GetCommunitiesByUid(uid string) ([]model.Community, error) {
 	return *communities, nil
 }
 
+func (c *Community) GetAll(cid int) (*model.CommunityDetailInfo, error) {
+	res := model.CommunityDetailInfo{}
+
+	comInfo, err := repository.GetInfoByCid(c.DB, cid)
+	if err != nil {
+		return nil, err
+	}
+
+	books, err := repository.GetBooksByCid(c.DB, cid)
+	if err != nil {
+		return nil, err
+	}
+
+	users, err := repository.GetUsersByCid(c.DB, cid)
+	if err != nil {
+		return nil, err
+	}
+
+	res.Community = *comInfo
+	res.Books = *books
+	res.Users = *users
+
+	fmt.Println("res,", res)
+	return &res, nil
+}
+
 func (c *Community) Register(userId int64, req *model.Community) (*model.Community, error) {
 	result, err := repository.CreateNewCommunity(c.DB, req)
 	if err != nil {

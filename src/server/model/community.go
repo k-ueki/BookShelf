@@ -14,3 +14,9 @@ type CommunityParams struct {
 	Uid int64 `db:"user_id"`
 	Cid int64 `db:"community_id"`
 }
+
+type CommunityDetailInfo struct {
+	Community Community `json:"community"`
+	Books     []Book    `json:"books"`
+	Users     []User    `json:"users"`
+}
