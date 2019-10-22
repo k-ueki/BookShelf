@@ -105,10 +105,9 @@ func (u *DBHandler) RegisterUserId(w http.ResponseWriter, r *http.Request) (int,
 		return http.StatusBadRequest, nil, errors.New("already exists")
 	}
 
-	// _, err := UserService.RegisterUserId(req)
-	// if err != nil {
-	// 	return http.StatusInternalServerError, nil, nil
-	// }
+	if err := UserService.RegisterUserId(req.UserId, req.DispName); err != nil {
+		return http.StatusInternalServerError, nil, nil
+	}
 
 	return http.StatusOK, nil, nil
 }

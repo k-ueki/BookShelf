@@ -48,14 +48,19 @@ func (u *User) IsExists(uid string) (*int64, bool) {
 }
 
 func (u *User) IsOKUserId(disp_name string) (bool, error) {
-	info, err := repository.IsExistsByDispName(u.DB, disp_name)
-	if err != nil {
-		return false, err
-	}
+	info, _ := repository.IsExistsByDispName(u.DB, disp_name)
 	if info != nil {
 		return false, nil
 	}
 
 	return true, nil
+}
+
+func (u *User) RegisterUserId(Uid int, dispname string) error {
+	_, err := repository.RegisterUid(u.DB, Uid, dispname)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 func main() {}

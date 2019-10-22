@@ -42,4 +42,16 @@ func IsExistsByDispName(db *sqlx.DB, dname string) (*model.UserDispName, error) 
 
 	return &resp, nil
 }
+
+func RegisterUid(db *sqlx.DB, id int, name string) (sql.Result, error) {
+	stmt, err := db.Prepare(`
+INSERT INTO user_id (user_id,disp_name) VALUES (?,?)
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+	return stmt.Exec(id, name)
+}
+
 func main() {}
