@@ -33,4 +33,13 @@ func IsExistsUserByUid(db *sqlx.DB, uid string) (*model.User, error) {
 	}
 	return &usr, nil
 }
+
+func IsExistsByDispName(db *sqlx.DB, dname string) (*model.UserDispName, error) {
+	resp := model.UserDispName{}
+	if err := db.Get(&resp, `SELECT user_id,disp_name FROM user_id WHERE disp_name=?`, dname); err != nil {
+		return nil, err
+	}
+
+	return &resp, nil
+}
 func main() {}

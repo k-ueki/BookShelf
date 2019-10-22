@@ -19,3 +19,8 @@ type UserReq struct {
 	Uid  string `db:"firebase_uid" json:"uid"`
 	Name string `db:"name" json:"name"`
 }
+
+type UserDispName struct {
+	Uid      int    `db:"user_id"`
+	DispName string `db:"disp_name"`
+}

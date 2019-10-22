@@ -39,15 +39,12 @@ func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interfac
 	userService := service.NewUserService(u.DB)
 	resp, err := userService.Index(uid)
 	if err != nil {
-		fmt.Println("errorだ!")
 		return http.StatusInternalServerError, nil, err
 	}
 	return http.StatusOK, resp, nil
 }
 
 func (u *DBHandler) Test(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("OK")
-
 	cookie := http.Cookie{
 		Name:  "test",
 		Value: "test,",
@@ -88,8 +85,29 @@ func (u *DBHandler) RegisterUser(w http.ResponseWriter, r *http.Request) (int, i
 }
 
 func (u *DBHandler) RegisterUserId(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	vars := mux.Vars(r)
-	id := vars["id"]
+	type user struct {
+		UserId   int    `json:"user_id"`
+		DispName string `json:"disp_name"`
+	}
+
+	req := &user{}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	UserService := service.NewUserService(u.DB)
+	flagOK, err := UserService.IsOKUserId(req.DispName)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	if !flagOK {
+		return http.StatusBadRequest, nil, nil
+	}
+
+	// _, err := UserService.RegisterUserId(req)
+	// if err != nil {
+	// 	return http.StatusInternalServerError, nil, nil
+	// }
 
 	return http.StatusOK, nil, nil
 }

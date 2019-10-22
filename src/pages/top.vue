@@ -22,7 +22,7 @@
 				</div>
 			</div>
 
-			<div class="overlay" v-if="userid==''"></div>
+			<!-- <div class="overlay" v&#45;if="userid==''"></div> -->
 			<div class="modal" v-if="userid==''">
 				<div>
 					<div class="modalHeader" style="float:left;">
@@ -251,8 +251,9 @@ export default{
 			}else{
 				console.log(uid)
 				console.log(id)
-				axios.post("http://localhost:8888/user/user_id/"+id,{
-					user_id:uid,
+				axios.post("http://localhost:8888/user/register/user_id",{
+					user_id:id,
+					disp_name:uid,
 				})
 					.then(res=>{
 						

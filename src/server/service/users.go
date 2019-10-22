@@ -47,4 +47,15 @@ func (u *User) IsExists(uid string) (*int64, bool) {
 	return &user.Id, true
 }
 
+func (u *User) IsOKUserId(disp_name string) (bool, error) {
+	info, err := repository.IsExistsByDispName(u.DB, disp_name)
+	if err != nil {
+		return false, err
+	}
+	if info != nil {
+		return false, nil
+	}
+
+	return true, nil
+}
 func main() {}
