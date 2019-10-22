@@ -87,6 +87,13 @@ func (u *DBHandler) RegisterUser(w http.ResponseWriter, r *http.Request) (int, i
 	return http.StatusCreated, nil, nil
 }
 
+func (u *DBHandler) RegisterUserId(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	return http.StatusOK, nil, nil
+}
+
 //Personal Info をIDから取得
 // func (u *DBHandler) SelectPersonalInfo(w http.ResponseWriter, r *http.Request) {
 // 	var res Res

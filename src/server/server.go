@@ -49,6 +49,7 @@ func (s *Server) Route() *mux.Router {
 	// r.HandleFunc("/user/{uid}", Controller.DiscriminateExists).Methods(http.MethodGet)
 	r.Methods(http.MethodGet).Path("/user/{uid}").Handler(AppHandler{Controller.DiscriminateExists})
 	r.Methods(http.MethodPost).Path("/user").Handler(AppHandler{Controller.RegisterUser})
+	r.Methods(http.MethodPost).Path("/user/user_id/{id}").Handler(AppHandler{Controller.RegisterUserId})
 
 	r.Methods(http.MethodGet).Path("/top/{uid}").Handler(AppHandler{Controller.Index})
 	r.Methods(http.MethodGet).Path("/top/community/{com_id}").Handler(AppHandler{Controller.GetTheCommunityInfo})
