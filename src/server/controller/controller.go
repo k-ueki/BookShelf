@@ -61,6 +61,9 @@ func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (
 
 	userService := service.NewUserService(u.DB)
 	tmp, isExists := userService.IsExists(uid)
+	if tmp == nil {
+		return http.StatusBadRequest, nil, errors.New("unknown user")
+	}
 	user_id := strconv.FormatInt(*tmp, 10)
 	fmt.Println(user_id)
 

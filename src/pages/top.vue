@@ -165,6 +165,7 @@ export default{
 
 			  let uid
 			  uid = user.uid
+			  console.log("user",user)
 
 			  axios.get("http://localhost:8888/user/" + uid)
 				  .then(res=>{
@@ -197,6 +198,8 @@ export default{
 								this.errorStatus = "Error: Network Error"
 							  })
 					  }
+				  }).catch (res=>{
+					console.log("error,hogehoge",res)
 				  })
 
 		  } else {
