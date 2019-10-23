@@ -23,7 +23,7 @@ func SelectDispNameByUid(db *sqlx.DB, uid string) (*string, error) {
 	return &usr.DispName, nil
 }
 
-func Register(db *sqlx.DB, user model.UserReq) (sql.Result, error) {
+func Register(db *sqlx.DB, uid, name, url string) (sql.Result, error) {
 	stmt, err := db.Prepare(`
 INSERT INTO users (firebase_uid,name,photo_url) VALUES (?,?,?)
 	`)
@@ -31,7 +31,7 @@ INSERT INTO users (firebase_uid,name,photo_url) VALUES (?,?,?)
 		return nil, err
 	}
 	defer stmt.Close()
-	return stmt.Exec(user.Uid, user.Name, "")
+	return stmt.Exec(uid, name, url)
 }
 
 func IsExistsUserByUid(db *sqlx.DB, uid string) (*model.User, error) {
