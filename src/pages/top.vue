@@ -199,6 +199,15 @@ export default{
 							  })
 					  }
 				  }).catch (res=>{
+					  axios.post("http://localhost:8888/user",{
+						  uid:uid,
+						  name:user.displayName,
+					  })
+						  .then(res=>{
+							this.name = user.displayName
+						  }).catch(err=>{
+							this.errorStatus = "Error: Network Error"
+						  })
 					console.log("error,hogehoge",res)
 				  })
 

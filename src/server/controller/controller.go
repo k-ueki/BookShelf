@@ -77,11 +77,17 @@ func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (
 }
 
 func (u *DBHandler) RegisterUser(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	req := model.UserReq{
-		Uid:  r.FormValue("uid"),
-		Name: r.FormValue("name"),
+	type registerReq struct {
+		Uid      string `json:"uid"`
+		Name     string `json:"name"`
+		PhotoUrl string `json:"photo_url"`
 	}
-	_, err := repository.Register(u.DB, req)
+	req := registerReq{}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	_, err := repository.Register(u.DB, req.Uid, req.Name, req.PhotoUrl)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
