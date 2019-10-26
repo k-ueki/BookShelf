@@ -2,7 +2,6 @@ package controller_user
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -28,7 +27,6 @@ func (u *DBHandler) CreateCommunity(w http.ResponseWriter, r *http.Request) (int
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
-	fmt.Println("com", com)
 
 	return http.StatusOK, nil, nil
 }
@@ -60,8 +58,6 @@ func (u *DBHandler) AddMembers(w http.ResponseWriter, r *http.Request) (int, int
 		return http.StatusBadRequest, nil, err
 	}
 	req.Ids = req.Ids[1:]
-
-	fmt.Println("req", req)
 
 	communityService := service.NewCommunityService(u.DB)
 	if err := communityService.Create(req.Ids, req.ComId); err != nil {
