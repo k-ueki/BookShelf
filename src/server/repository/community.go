@@ -91,3 +91,11 @@ INSERT INTO communities (name) VALUES (?)
 	defer stmt.Close()
 	return stmt.Exec(req.Name)
 }
+
+// func CreateCommunity(db *sqlx.DB, sess *dbr.Session, coms []model.CommunityParams) (sql.Result, error) {
+// 	stmt := sess.InsertInto("user_community").Columns("user_id", "community_id")
+// 	for _, v := range coms {
+// 		stmt.Record(v)
+// 	}
+// 	return stmt.Exec()
+// }

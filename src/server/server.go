@@ -61,6 +61,7 @@ func (s *Server) Route() *mux.Router {
 	r.Methods(http.MethodGet).Path("/community/{uid}").Handler(AppHandler{Controller.GetCommunities})
 	r.Methods(http.MethodPost).Path("/community").Handler(AppHandler{Controller.PostCommunities})
 	r.Methods(http.MethodPost).Path("/community/add/").Handler(AppHandler{Controller.CreateCommunity})
+	r.Methods(http.MethodPost).Path("/community/members/add/").Handler(AppHandler{Controller.AddMembers})
 
 	r.Methods(http.MethodPost).Path("/register/book/").Handler(AppHandler{Controller.RegisterBook})
 
