@@ -46,7 +46,7 @@
 								</tr>
 							</table>
 						</div>
-						<v-btn><span>決定</span></v-btn>
+						<v-btn @click="decide"><span>決定</span></v-btn>
 					</div>
 				</div>
 			</div>
@@ -179,19 +179,44 @@ export default{
 			if(this.addname==""){
 				alert("no name")
 			}else{
-				axios.post("http://localhost:8888/user/search",{
-					disp_name:this.addname
-				}).then(res=>{
-					console.log("OK")
-					this.names[this.count] = this.addname
-					this.ids[this.count]=this.count//暫定
-					this.count++
-					this.addname=""
-				}).catch(res=>{
-					console.log("bad")
-				})
-				console.log(this.names)
+				let i;
+				for(i=1;i<=this.count;i++){
+					if(this.addname==this.names[i]){
+						break;
+					}
+				}
+
+				if(i==this.count+1){
+					axios.post("http://localhost:8888/user/search",{
+						disp_name:this.addname
+					}).then(res=>{
+						if(res.data.name!=this.$route.params["user"]){
+							this.names[this.count] = res.data.disp_name
+							this.ids[this.count] = res.data.id//暫定
+							this.count++
+							this.addname=""
+						}else{
+							alert("It's myself")
+							this.addname=""
+						}
+					}).catch(res=>{
+						alert("unknown user")
+						this.addname=""
+					})
+				}else{
+					alert("the user is already added")
+					this.addname="";
+				}
 			}
+		},
+		decide(){
+			axios.post("http://localhost:8888/community/members/add/",{
+				ids:this.ids,
+				com_id:this.$route.params["com_id"]
+			}).then(res=>{
+				alert("追加完了!")
+			}).catch(res=>{
+			})
 		}
 	},
 	components:{
