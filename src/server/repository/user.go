@@ -14,6 +14,23 @@ func SelectUserByUid(db *sqlx.DB, uid string) (*model.User, error) {
 	}
 	return &usr, nil
 }
+func GetByDispName(db *sqlx.DB, name string) (*model.User, error) {
+	usr := model.User{}
+	if err := db.Get(&usr, `
+SELECT 
+	users.id,
+	users.name,
+	users.photo_url,
+	user_id.disp_name
+FROM users 
+INNER JOIN user_id
+ON users.id = user_id.user_id
+WHERE user_id.disp_name=?
+`, name); err != nil {
+		return nil, err
+	}
+	return &usr, nil
+}
 
 func SelectDispNameByUid(db *sqlx.DB, uid string) (*string, error) {
 	usr := model.User{}

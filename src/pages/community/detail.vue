@@ -179,10 +179,17 @@ export default{
 			if(this.addname==""){
 				alert("no name")
 			}else{
-				this.names[this.count] = this.addname
-				this.ids[this.count]=this.count//暫定
-				this.count++
-				this.addname=""
+				axios.post("http://localhost:8888/user/search",{
+					disp_name:this.addname
+				}).then(res=>{
+					console.log("OK")
+					this.names[this.count] = this.addname
+					this.ids[this.count]=this.count//暫定
+					this.count++
+					this.addname=""
+				}).catch(res=>{
+					console.log("bad")
+				})
 				console.log(this.names)
 			}
 		}

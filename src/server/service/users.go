@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/k-ueki/app2/src/server/model"
 	"github.com/k-ueki/app2/src/server/repository"
@@ -74,4 +76,17 @@ func (u *User) RegisterUserId(Uid int, dispname string) error {
 	}
 	return nil
 }
+
+func (u *User) GetInfoByDispName(name string) (*model.User, error) {
+	user, err := repository.GetByDispName(u.DB, name)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errors.New("unknown user")
+	}
+
+	return user, nil
+}
+
 func main() {}
