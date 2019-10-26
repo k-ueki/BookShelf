@@ -57,5 +57,4 @@ INSERT INTO user_book (user_id,book_id) VALUES (?,?)
 	}
 	defer stmt.Close()
 	return stmt.Exec(user_id, book_id)
-
 }

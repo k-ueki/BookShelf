@@ -1,7 +1,7 @@
 <template>
 	<v-app style="background-color:rgb(245,245,245);">
 		<Header/>
-        <div class="main-wrapper-top">
+		<div class="main-wrapper-top">
 			<div class="overlay" v-show="showModal"></div>
 			<div class="modal" v-show="showModal">
 				<div>
@@ -22,6 +22,24 @@
 				</div>
 			</div>
 
+			<div class="overlay" v-show="showModalUserId"></div>
+			<div class="modal" v-show="showModalUserId">
+				<div>
+					<div class="modalHeader" style="float:left;">
+						<!-- <div style="cursor:pointer;" @click="closemodal">X</div> -->
+						<span>{{name}} さんuser_idを登録しましょう！</span>
+					</div>
+					<br/><br/>
+					<div class="modalinfo" align="center" style="">
+						<!-- <tr><img class="" :src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"></tr> -->
+						<tr>
+							<span>user_id:</span><input v-model="inputUserId" style="border-bottom:solid 1px black;"></input>
+						</tr>
+						<tr class=""><v-btn style="cursor:pointer;color:red;" @click="registerUserId(inputUserId,id)">登録</v-btn></tr>
+					</div>
+				</div>
+			</div>
+
             <div class="parsonal-sp">
                 <!--top-image-->
 				<!--
@@ -29,7 +47,7 @@
 				-->
 				<img class="iconSelf" src="../../images/UNADJUSTEDNONRAW_thumb_411.jpg"> 
 				<div class="parsonal-name"> {{ name }}</div>
-				<div class="">{{userid}}</div>
+					<div class="">@{{userid}}</div>
 
 				<br/>
 				<span style="color:rgba(0,0,0,0.4);">Communities</span>
@@ -134,6 +152,8 @@ export default{
 			indextmp:'',
 			userid:'',
 			communities:'',
+			inputUserId:'',
+			showModalUserId:false,
 		}
 	},
 	created:function(){
@@ -145,16 +165,23 @@ export default{
 
 			  let uid
 			  uid = user.uid
+			  console.log("user",user)
 
 			  axios.get("http://localhost:8888/user/" + uid)
 				  .then(res=>{
+					  console.log("resss",res)
 					  if(res.data){
 						axios.get("http://localhost:8888/top/" + uid)
 							.then(res => {
 								console.log("res",res.data)
+								this.id = res.data.id;
 								this.name = res.data.name;
+								this.userid = res.data.disp_name;
 								this.booksinfo = res.data.books;
 								this.communities = res.data.communities;
+								if(this.userid==''){
+									this.showModalUserId=true;
+								}
 								console.log("img",res.data.books[1].img_url)
 							}).catch(err => {
 								this.errorStatus = "Error: Network Error";
@@ -171,6 +198,17 @@ export default{
 								this.errorStatus = "Error: Network Error"
 							  })
 					  }
+				  }).catch (res=>{
+					  axios.post("http://localhost:8888/user",{
+						  uid:uid,
+						  name:user.displayName,
+					  })
+						  .then(res=>{
+							this.name = user.displayName
+						  }).catch(err=>{
+							this.errorStatus = "Error: Network Error"
+						  })
+					console.log("error,hogehoge",res)
 				  })
 
 		  } else {
@@ -224,6 +262,23 @@ export default{
 		},
 		selectCommunity(id){
 			console.log("comid",id)
+		},
+		registerUserId(uid,id){
+			if(uid==''){
+				alert("入力が正しくありません")
+			}else{
+				console.log(uid)
+				console.log(id)
+				axios.post("http://localhost:8888/user/register/user_id",{
+					user_id:id,
+					disp_name:uid,
+				})
+					.then(res=>{
+						alert("登録完了")
+					}).catch(res=>{
+						alert("既に使われているIDでした.")
+					})
+			}
 		}
 	},
 	components:{
