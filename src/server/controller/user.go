@@ -2,7 +2,6 @@ package controller_user
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/k-ueki/app2/src/server/service"
@@ -16,7 +15,6 @@ func (u *DBHandler) UserSearch(w http.ResponseWriter, r *http.Request) (int, int
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		return http.StatusBadRequest, nil, err
 	}
-	fmt.Println("name", req.Name)
 
 	userService := service.NewUserService(u.DB)
 	user, err := userService.GetInfoByDispName(req.Name)
