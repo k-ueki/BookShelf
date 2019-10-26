@@ -21,6 +21,36 @@
 				</div>
 			</div>
 
+			<div class="modal" v-show="showModalMemAdd">
+				<!-- <div style="float:right;"> -->
+				<!-- 		<div style="cursor:pointer;" @click="closemodalMemAdd">X</div> -->
+				<!-- </div> -->
+				<div style="height:100%;width:100%;">
+					<div class="modalHeader" style="float:right;height:5%;">
+						<div style="cursor:pointer;" @click="closemodalMemAdd">X</div>
+					</div>
+					<div style="float:left;height:50%;width:30%;" class="addition-sp">
+						<div v-for="">
+							<input placeholder="name" v-model="addname">
+							<v-btn @click="plus">+</v-btn>
+						</div>
+					</div>
+					<div style="float:left;border:solid 2px red;height:95%;width:50%;" class="add-list-sp">
+						<div style="border-bottom=solid 2px red;">
+							<table>
+								<th>Id</th>
+								<th>Name</th>
+								<tr v-for="co in count">
+									<td>{{ids[co]}}</td>
+									<td>{{names[co]}}</td>
+								</tr>
+							</table>
+						</div>
+						<v-btn @click="decide"><span>決定</span></v-btn>
+					</div>
+				</div>
+			</div>
+
             <div class="parsonal-sp">
 				<img class="iconSelf" src="../../../images/library-1147815_1920.jpg"> 
 				<div class="com-name" style="font-size:25;"> {{ name }} </div>
@@ -44,6 +74,7 @@
 					<v-btn
 						text
 						target="_blank"
+						@click="memAddition"
 						><span>member add</span></v-btn>
 					<div class="searchWrap">
 						<v-form>
@@ -86,11 +117,16 @@ export default{
 			id:'',
 			name:"",
 			showModal:false,
+			showModalMemAdd:false,
 			booksinfo:'',
 			clickedbook:'',
 			indextmp:'',
 			userid:'',
 			members:[],
+			count:1,
+			names:[],
+			ids:[],
+			addname:"",
 		}
 	},
 	created:function(){
@@ -112,8 +148,17 @@ export default{
 				this.showModal=true;
 			}
 		},
+		memAddition(){
+			if(!this.showModalMemAdd){
+				this.showModalMemAdd=true
+			}
+		},
 		closemodal(){
 			this.showModal=false;
+		},
+		closemodalMemAdd(){
+			this.showModalMemAdd=false;
+			this.count=1;
 		},
 		delBook(book,index){
 			this.booksinfo.splice(index,1)
@@ -122,6 +167,56 @@ export default{
 			if(confirm(book.Title+" を削除しますか？")){
 				// axios.post("http://localhost:8888/top/del/",params)
 			}
+		// },
+		// countMinus(){
+		// 	if(this.count>1){
+		// 		this.count--;
+		// 	}else{
+		// 		//this.name=""
+		// 	}
+		},
+		plus(){
+			if(this.addname==""){
+				alert("no name")
+			}else{
+				let i;
+				for(i=1;i<=this.count;i++){
+					if(this.addname==this.names[i]){
+						break;
+					}
+				}
+
+				if(i==this.count+1){
+					axios.post("http://localhost:8888/user/search",{
+						disp_name:this.addname
+					}).then(res=>{
+						if(res.data.name!=this.$route.params["user"]){
+							this.names[this.count] = res.data.disp_name
+							this.ids[this.count] = res.data.id//暫定
+							this.count++
+							this.addname=""
+						}else{
+							alert("It's myself")
+							this.addname=""
+						}
+					}).catch(res=>{
+						alert("unknown user")
+						this.addname=""
+					})
+				}else{
+					alert("the user is already added")
+					this.addname="";
+				}
+			}
+		},
+		decide(){
+			axios.post("http://localhost:8888/community/members/add/",{
+				ids:this.ids,
+				com_id:this.$route.params["com_id"]
+			}).then(res=>{
+				alert("追加完了!")
+			}).catch(res=>{
+			})
 		}
 	},
 	components:{
@@ -223,6 +318,7 @@ export default{
 	width:50%;
 	height:50%;
 	background:#ffff;
+	border:solid 3px red;
 }
 .overlay{
 	display: flex;
@@ -238,6 +334,7 @@ export default{
 }
 .modalHeader{
 	align:right;
+	background-color:rgba(144,24,38,0.5);
 }
 
 .mem-icon{
@@ -245,5 +342,22 @@ export default{
 	height:30px;
 	border-radius:50%;
 	margin-top:10px;
+}
+
+.add-list-sp{
+    width:100%;
+    height:100%;
+    float:right;
+	/* background-color:rgb(255,255,255); */
+	background-color:rgba(25,177,140,0.5);
+}
+
+.addition-sp{
+	/* background-color:rgb(255,255,255); */
+	background-color:rgba(144,190,240,0.5);
+    width:100%;
+    height:100%;
+    float:left;
+    text-align:center;
 }
 </style>

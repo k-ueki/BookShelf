@@ -53,7 +53,7 @@
 				<span style="color:rgba(0,0,0,0.4);">Communities</span>
 				<div v-for="com in communities">
 					<div>
-						<router-link :to="{name:'CommunityDetail',params:{com_id:com.id,name:com.name}}">
+						<router-link :to="{name:'CommunityDetail',params:{com_id:com.id,name:com.name,user:name}}">
 							<a @click="selectCommunity(com.id)">
 								{{com.name}}
 							</a>
