@@ -1,5 +1,5 @@
 <template>
-	<v-app style="background-color:rgb(245,245,245);">
+	<v-app style="background-color:rgba(0,204,51,0.5);">
 		<Header/>
         <div class="main-wrapper-top">
 			<div class="overlay" v-show="showModal"></div>
