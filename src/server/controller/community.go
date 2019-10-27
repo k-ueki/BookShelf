@@ -23,7 +23,7 @@ func (u *DBHandler) CreateCommunity(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	CommunityService := service.NewCommunityService(u.DB)
-	com, err := CommunityService.Register(userId, req)
+	_, err := CommunityService.Register(userId, req)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
