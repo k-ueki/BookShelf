@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -22,7 +21,6 @@ func NewServer() *Server {
 }
 
 func (s *Server) Init() {
-	fmt.Println("OK")
 	s.router = s.Route()
 }
 
