@@ -1,4 +1,4 @@
-package controller_user
+package controller
 
 import (
 	"encoding/json"

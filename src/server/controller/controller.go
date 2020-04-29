@@ -1,4 +1,4 @@
-package controller_user
+package controller
 
 import (
 	"encoding/json"
@@ -25,11 +25,11 @@ type DBHandler struct {
 
 //return用
 type Res struct {
-	ID     int          `json:id`
-	Name   string       `json:name`
-	UserId string       `json:userid`
-	Email  string       `json:email`
-	Books  []model.Book `json:books`
+	ID     int          `json:"id"`
+	Name   string       `json:"name"`
+	UserId string       `json:"userId"`
+	Email  string       `json:"email"`
+	Books  []model.Book `json:"books"`
 }
 
 func (u *DBHandler) Index(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
@@ -78,16 +78,16 @@ func (u *DBHandler) DiscriminateExists(w http.ResponseWriter, r *http.Request) (
 
 func (u *DBHandler) RegisterUser(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	type registerReq struct {
-		Uid      string `json:"uid"`
-		Name     string `json:"name"`
-		PhotoUrl string `json:"photo_url"`
+		Uid    string `json:"uid"`
+		Name   string `json:"name"`
+		ImgUrl string `json:"imgUrl"`
 	}
 	req := registerReq{}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		return http.StatusBadRequest, nil, err
 	}
 
-	_, err := repository.Register(u.DB, req.Uid, req.Name, req.PhotoUrl)
+	_, err := repository.Register(u.DB, req.Uid, req.Name, req.ImgUrl)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
