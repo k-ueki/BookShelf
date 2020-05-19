@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+    # app:
+    #     build: ./
+    #     ports:
+    #         - "8080:8080"
+
+    # front:
+
+    mysql:
+        image: mysql:5.7
+        restart: always
+        container_name: uchihon-db
+        tty: true
+        stdin_open: true
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+        ports: 
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: uchihon
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
